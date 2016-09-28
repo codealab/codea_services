@@ -14,7 +14,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Created at'>#{time}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
-    p check = JSON.parse(Net::HTTP.get(request))
+    check = JSON.parse(Net::HTTP.get(request))
     zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
     hash = {id: zoho_id , response: {result: true, params: params}}
     render json: hash.to_json
