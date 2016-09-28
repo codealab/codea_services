@@ -10,7 +10,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
     changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
     changes += "<FL val='Offer'>#{params["offer"]}</FL>"
-    time = Time.now -5.hours
+    time = Time.now
     changes += "<FL val='Created at'>#{time.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
