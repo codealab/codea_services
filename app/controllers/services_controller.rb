@@ -13,8 +13,10 @@ class ServicesController < ApplicationController
     time = Time.now.strftime("%m/%d/%Y %H:%M:%S")
     changes += "<FL val='Created at'>#{time}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
-    request = JSON.parse(Net::HTTP.get(URI.parse(URI.escape(base_request + base_xmldata))))
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    p check = JSON.parse(Net::HTTP.get(request))
     zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
-    render json: {id: zoho_id , response: {result: true, params: params}}.to_json
+    hash = {id: zoho_id , response: {result: true, params: params}}
+    render json: hash.to_json
   end
 end
