@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: codeaservices_development
+
+test:
+  <<: *default
+  database: codeaservices_test
+
+production:
+  <<: *default
+  database: codeaservices_production
+  username: codeaservices
+  password: <%= ENV['CODEASERVICES_DATABASE_PASSWORD'] %>
