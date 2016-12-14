@@ -11,5 +11,6 @@
 /log/*
 !/log/.keep
 /tmp
+*.DS_Store
 
 /config/zoho.yml
