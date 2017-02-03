@@ -51,8 +51,8 @@ class ServicesController < ApplicationController
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
       changes += "<FL val='Mail Campaign'>#{new_notes}</FL>"
-      changes += "<FL val='Email'>#{params["email"]}</FL>" if email
-      changes += "<FL val='Phone'>#{params["phone"]}</FL>" if phone
+      changes += "<FL val='Email'>#{email}</FL>" if email
+      changes += "<FL val='Phone'>#{phone}</FL>" if phone
       base_xmldata = "<#{user_type}><row no='1'>#{changes}</row></#{user_type}>"
       request = URI.parse(URI.escape(base_request + base_xmldata))
       check = JSON.parse(Net::HTTP.get(request))
@@ -62,3 +62,5 @@ class ServicesController < ApplicationController
     end
   end
 end
+
+puts;color=[:light_red,:light_yellow,:light_cyan,:light_magenta,:light_white]+[:green]*30;((1..30).to_a+[6]*8).each { |i|line="";(i*2).times{line+=rand(0..1).to_s }; puts line.center(120)};greetings = 'Feliz Navidad de parte de todos en ' + "{".colorize(:yellow) + "Codea".colorize(:light_cyan) + "Camp".colorize(:light_black) + '}'.colorize(:yellow);puts greetings.center(120)
