@@ -12,7 +12,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
     changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
     changes += "<FL val='Offer'>#{params["offer"]}</FL>"
-    time = Time.now - 3.hours
+    time = Time.zone.now
     time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
     changes += "<FL val=\"Created Time\">#{time}</FL>"
     changes += "<FL val='Created at'>#{time}</FL>"
