@@ -1,7 +1,9 @@
 class ServicesController < ApplicationController
   def send_zoho
+    user = Salesman.assigned
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&xmlData="
     changes = ""
+    changes += "<FL val='Lead Owner'>#{user.email}</FL>"
     changes += "<FL val='Last Name'>#{params["name"]}</FL>"
     changes += "<FL val='Email'>#{params["email"]}</FL>"
     changes += "<FL val='Phone'>#{params["phone"]}</FL>"
@@ -62,5 +64,3 @@ class ServicesController < ApplicationController
     end
   end
 end
-
-puts;color=[:light_red,:light_yellow,:light_cyan,:light_magenta,:light_white]+[:green]*30;((1..30).to_a+[6]*8).each { |i|line="";(i*2).times{line+=rand(0..1).to_s }; puts line.center(120)};greetings = 'Feliz Navidad de parte de todos en ' + "{".colorize(:yellow) + "Codea".colorize(:light_cyan) + "Camp".colorize(:light_black) + '}'.colorize(:yellow);puts greetings.center(120)
