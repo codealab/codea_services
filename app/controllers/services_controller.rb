@@ -41,6 +41,7 @@ class ServicesController < ApplicationController
     render json: check.to_json
   end
   def mail_campaign
+    url = params[:url]
     user_type = params['user_type'] == "Leads" ? "Leads" : "Contacts"
     user_request = "https://crm.zoho.com/crm/private/json/#{user_type}/getRecordById?authtoken=#{ENV['ZOHO_TOKEN']}&id=#{params["zoho_id"]}&scope=crmapi&newFormat=2"
     user_check = JSON.parse(Net::HTTP.get(URI.parse(URI.escape(user_request))))
@@ -52,6 +53,8 @@ class ServicesController < ApplicationController
       phone = (params['phone'] && params['phone'] != "" ) ? params['phone'] : nil
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
+      changes += "<FL val='#{user_type[0..-1]} Status'>Interested Again</FL>"
+      changes += "<FL val='Interested Again'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Mail Campaign'>#{new_notes}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
       changes += "<FL val='Phone'>#{phone}</FL>" if phone
@@ -59,6 +62,7 @@ class ServicesController < ApplicationController
       request = URI.parse(URI.escape(base_request + base_xmldata))
       check = JSON.parse(Net::HTTP.get(request))
       render json: check.to_json
+      redirect_to url
     else
       render plain: "ERROR"
     end
