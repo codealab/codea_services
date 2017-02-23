@@ -47,23 +47,22 @@ class ServicesController < ApplicationController
     user_check = JSON.parse(Net::HTTP.get(URI.parse(URI.escape(user_request))))
     unless user_check["response"]["nodata"]
       old_campaign = user_check["response"]["result"][user_type]["row"]["FL"].select { |field| field["val"] == "Mail Campaign Log" }.first["content"]
-      campaign = "Campaña: #{params["campaign"]} \n" + ("-" * 50)
+      campaign = "Campaña: #{params["campaign"]} \n"
       new_campaign = old_campaign == "null" ? campaign : campaign + "\n" + old_campaign
       email = (params['email'] && params['email'] != "" ) ? params['email'] : nil
       phone = (params['phone'] && params['phone'] != "" ) ? params['phone'] : nil
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
-      changes += "<FL val='#{user_type[0..-1]} Status'>Interested Again</FL>"
+      p changes += "<FL val='#{user_type[0..-2]} Status'>Interested Again</FL>"
       changes += "<FL val='Interested Again'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Mail Campaign'>#{campaign}</FL>"
       changes += "<FL val='Mail Campaign Log'>#{new_campaign}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
       changes += "<FL val='Phone'>#{phone}</FL>" if phone
       base_xmldata = "<#{user_type}><row no='1'>#{changes}</row></#{user_type}>"
-      request = URI.parse(URI.escape(base_request + base_xmldata))
+      p request = URI.parse(URI.escape(base_request + base_xmldata))
       check = JSON.parse(Net::HTTP.get(request))
       render json: check.to_json
-      redirect_to url
     else
       render plain: "ERROR"
     end
