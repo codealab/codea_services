@@ -46,16 +46,17 @@ class ServicesController < ApplicationController
     user_request = "https://crm.zoho.com/crm/private/json/#{user_type}/getRecordById?authtoken=#{ENV['ZOHO_TOKEN']}&id=#{params["zoho_id"]}&scope=crmapi&newFormat=2"
     user_check = JSON.parse(Net::HTTP.get(URI.parse(URI.escape(user_request))))
     unless user_check["response"]["nodata"]
-      old_notes = user_check["response"]["result"][user_type]["row"]["FL"].select { |field| field["val"] == "Mail Campaign" }.first["content"]
-      notes = "Campaña: #{params["campaign"]} \n Notas: #{params["notes"]} \n" + ("-" * 50)
-      new_notes = old_notes == "null" ? notes : notes + "\n" + old_notes
+      old_campaign = user_check["response"]["result"][user_type]["row"]["FL"].select { |field| field["val"] == "Mail Campaign Log" }.first["content"]
+      campaign = "Campaña: #{params["campaign"]} \n" + ("-" * 50)
+      new_campaign = old_campaign == "null" ? campaign : campaign + "\n" + old_campaign
       email = (params['email'] && params['email'] != "" ) ? params['email'] : nil
       phone = (params['phone'] && params['phone'] != "" ) ? params['phone'] : nil
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
       changes += "<FL val='#{user_type[0..-1]} Status'>Interested Again</FL>"
       changes += "<FL val='Interested Again'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-      changes += "<FL val='Mail Campaign'>#{new_notes}</FL>"
+      changes += "<FL val='Mail Campaign'>#{campaign}</FL>"
+      changes += "<FL val='Mail Campaign Log'>#{new_campaign}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
       changes += "<FL val='Phone'>#{phone}</FL>" if phone
       base_xmldata = "<#{user_type}><row no='1'>#{changes}</row></#{user_type}>"
