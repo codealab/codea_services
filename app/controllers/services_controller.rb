@@ -53,14 +53,14 @@ class ServicesController < ApplicationController
       phone = (params['phone'] && params['phone'] != "" ) ? params['phone'] : nil
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
-      p changes += "<FL val='#{user_type[0..-2]} Status'>Interested Again</FL>"
+      changes += "<FL val='#{user_type[0..-2]} Status'>Interested Again</FL>"
       changes += "<FL val='Interested Again'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Mail Campaign'>#{campaign}</FL>"
       changes += "<FL val='Mail Campaign Log'>#{new_campaign}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
       changes += "<FL val='Phone'>#{phone}</FL>" if phone
       base_xmldata = "<#{user_type}><row no='1'>#{changes}</row></#{user_type}>"
-      p request = URI.parse(URI.escape(base_request + base_xmldata))
+      request = URI.parse(URI.escape(base_request + base_xmldata))
       check = JSON.parse(Net::HTTP.get(request))
       render json: check.to_json
     else
