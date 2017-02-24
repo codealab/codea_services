@@ -1,7 +1,7 @@
 class ServicesController < ApplicationController
   def send_zoho
     user = Salesman.assigned
-    base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='Lead Owner'>#{user.email}</FL>"
     changes += "<FL val='Last Name'>#{params["name"]}</FL>"
