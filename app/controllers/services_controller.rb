@@ -32,7 +32,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Profession'>#{params["profession"]}</FL>"
     changes += "<FL val='Profession Type'>#{params["profession_type"]}</FL>"
     changes += "<FL val='Residence'>#{params["residence"]}</FL>"
-    changes += "<FL val='Availability'>#{params["availability"]}</FL>"
+    changes += "<FL val='Salary'>#{params["salary"]}</FL>"
     changes += "<FL val='Payment Method'>#{params["payment_method"]}</FL>"
     changes += "<FL val='Completed Advance Form'>true</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
