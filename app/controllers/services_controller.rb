@@ -23,7 +23,7 @@ class ServicesController < ApplicationController
     render json: {id: zoho_id}.to_json
   end
   def update_zoho
-    base_request = "https://crm.zoho.com/crm/private/json/Leads/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/Leads/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='Knowledge'>#{params["knowledge"]}</FL>"
     changes += "<FL val='Age'>#{params["age"]}</FL>"
