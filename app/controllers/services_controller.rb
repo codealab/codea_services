@@ -54,7 +54,7 @@ class ServicesController < ApplicationController
       base_request = "https://crm.zoho.com/crm/private/json/#{user_type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&xmlData="
       changes = ""
       changes += "<FL val='#{user_type[0..-2]} Status'>Interested Again</FL>"
-      changes += "<FL val='Interested Again'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+      changes += "<FL val='Interested Again'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Mail Campaign'>#{campaign}</FL>"
       changes += "<FL val='Mail Campaign Log'>#{new_campaign}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
