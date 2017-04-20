@@ -56,7 +56,7 @@ class ServicesController < ApplicationController
       changes += "<FL val='#{user_type[0..-2]} Status'>Interested Again</FL>"
       changes += "<FL val='Interested Again'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Mail Campaign'>#{campaign}</FL>"
-      changes += "<FL val='Mail Campaign Log'>#{new_campaign}</FL>"
+      changes += "<FL val='Mail Campaign Log'>#{new_campaign} #{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
       changes += "<FL val='Email'>#{email}</FL>" if email
       changes += "<FL val='Phone'>#{phone}</FL>" if phone
       base_xmldata = "<#{user_type}><row no='1'>#{changes}</row></#{user_type}>"
