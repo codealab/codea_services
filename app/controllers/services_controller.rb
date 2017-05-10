@@ -1,4 +1,5 @@
 class ServicesController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def send_zoho
     user = Salesman.assigned
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
