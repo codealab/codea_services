@@ -69,6 +69,7 @@ class ServicesController < ApplicationController
   end
   def calendly
     puts "CALENDLY PARAMS"
+    p Time.zone.now
     p params
   end
 end
