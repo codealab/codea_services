@@ -74,6 +74,7 @@ class ServicesController < ApplicationController
       invitee_mail = params['payload']['invitee']['email']
       invitee_start = Date.parse params['event']['start_time']
       invitee_end = Date.parse params['event']['end_time']
+      p {mail: invitee_mail, start: invitee_start, end: invitee_end}
       render json: {mail: invitee_mail, start: invitee_start, end: invitee_end}.to_json
     else
       pp params
