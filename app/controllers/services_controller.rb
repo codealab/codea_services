@@ -67,4 +67,8 @@ class ServicesController < ApplicationController
       render plain: "ERROR"
     end
   end
+  def calendly
+    puts "CALENDLY PARAMS"
+    p params
+  end
 end
