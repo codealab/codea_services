@@ -68,6 +68,7 @@ class ServicesController < ApplicationController
     end
   end
   def calendly
+    pp params
     render plain: create_event(params[:name],params[:email],params[:start_time],params[:end_time],params[:link])
     # parsed_params = JSON.parse(params[:_json])
     # event = parsed_params['event']
