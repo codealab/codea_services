@@ -68,7 +68,8 @@ class ServicesController < ApplicationController
     end
   end
   def calendly
-    p "CALENDLY" * 20
+    p "CALENDLY INIT"
+    p params
     event = params['event']
     if event == 'invitee.created'
       invitee_mail = params['payload']['invitee']['email']
@@ -80,6 +81,6 @@ class ServicesController < ApplicationController
       pp params
       render plain: 'CANCELADO'
     end
-    p "CALENDLY" * 20
+    p "END"
   end
 end
