@@ -68,19 +68,18 @@ class ServicesController < ApplicationController
     end
   end
   def calendly
-    p "CALENDLY INIT"
-    p params
-    event = params['event']
+    parsed_params = JSON.parse(params[:_json])
+    event = parsed_params['event']
     if event == 'invitee.created'
-      invitee_mail = params['payload']['invitee']['email']
-      invitee_start = Date.parse params['event']['start_time']
-      invitee_end = Date.parse params['event']['end_time']
-      p invitee_mail, invitee_start, invitee_end
-      render json: {mail: invitee_mail, start: invitee_start, end: invitee_end}.to_json
+      invitee = parsed_params['payload']['invitee']['name']
+      invitee_mail = parsed_params['payload']['invitee']['email']
+      invitee_start = DateTime.parse(parsed_params['payload']['event']['start_time'])
+      invitee_end = DateTime.parse(parsed_params['payload']['event']['end_time'])
+      render plain: create_event(invitee,invitee_mail,invitee_start,invitee_end)
+    elsif event == 'invitee.canceled'
+      render plain: 'Canceled'
     else
-      pp params
-      render plain: 'CANCELADO'
+      render plain: 'ERROR'
     end
-    p "END"
   end
 end
