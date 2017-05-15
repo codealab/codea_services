@@ -23,7 +23,7 @@ module ServicesHelper
     end
   end
 
-  def create_event(name,mail,start_dt,end_dt)
+  def create_event(name,mail,start_dt,end_dt,link)
     contact = search_zoho(mail,'Contacts')
     lead = search_zoho(mail,'Leads')
     if contact
@@ -41,6 +41,7 @@ module ServicesHelper
     id = contact_id ? contact_id : lead_id
     changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
     changes += "<FL val='Created at'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Description'>#{link}</FL>"
     changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
     changes += "<FL val='whichCall'>ScheduleCall</FL>"
     #owner
