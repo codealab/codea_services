@@ -68,21 +68,21 @@ class ServicesController < ApplicationController
     end
   end
   def calendly
-    # puts "Calendly"
-    # pp params
-    # render plain: create_event(params[:name],params[:email],params[:start_time],params[:end_time],params[:link])
-    parsed_params = JSON.parse(params[:_json])
-    event = parsed_params['event']
-    if event == 'invitee.created'
-      invitee = parsed_params['payload']['invitee']['name']
-      invitee_mail = parsed_params['payload']['invitee']['email']
-      invitee_start = DateTime.parse(parsed_params['payload']['event']['start_time'])
-      invitee_end = DateTime.parse(parsed_params['payload']['event']['end_time'])
-      render plain: create_event(invitee,invitee_mail,invitee_start,invitee_end)
-    elsif event == 'invitee.canceled'
-      render plain: 'Canceled'
-    else
-      render plain: 'ERROR'
-    end
+    puts "Calendly"
+    pp params
+    render plain: create_event(params[:name],params[:email],params[:start_time],params[:end_time],params[:link])
+    # parsed_params = JSON.parse(params[:_json])
+    # event = parsed_params['event']
+    # if event == 'invitee.created'
+    #   invitee = parsed_params['payload']['invitee']['name']
+    #   invitee_mail = parsed_params['payload']['invitee']['email']
+    #   invitee_start = DateTime.parse(parsed_params['payload']['event']['start_time'])
+    #   invitee_end = DateTime.parse(parsed_params['payload']['event']['end_time'])
+    #   render plain: create_event(invitee,invitee_mail,invitee_start,invitee_end)
+    # elsif event == 'invitee.canceled'
+    #   render plain: 'Canceled'
+    # else
+    #   render plain: 'ERROR'
+    # end
   end
 end
