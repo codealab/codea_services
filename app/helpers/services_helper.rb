@@ -23,15 +23,17 @@ module ServicesHelper
     end
   end
 
-  def create_event(name,mail,start_dt,end_dt,link)
+  def create_event(name,mail,start_dt,end_dt,link,answer)
     contact = search_zoho(mail,'Contacts')
     lead = search_zoho(mail,'Leads')
     if contact
-      contact_id = contact[0]
+      contact_id = contact[0].is_a?(Array) ? contact[0].first : contact[0]
       owner_id = contact[1]
-    else
-      lead_id = lead[0]
+    elsif lead
+      lead_id = lead[0].is_a?(Array) ? lead[0].first : lead[0]
       owner_id = lead[1]
+    else
+      "ERROR"
     end
     type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
     base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&newFormat=1&xmlData="
@@ -39,9 +41,14 @@ module ServicesHelper
     changes += "<FL val='Call Start Time'>#{(start_dt - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     id = contact_id ? contact_id : lead_id
-    changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
+    if type == 'Contacts'
+      changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
+    else
+      changes += "<FL val='SEID'>#{id}</FL>"
+      changes += "<FL val='SEMODULE'>Leads</FL>"
+    end
     changes += "<FL val='Created at'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    changes += "<FL val='Description'>#{link}</FL>"
+    changes += "<FL val='Description'>#{answer}: #{link}</FL>"
     changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
     changes += "<FL val='whichCall'>ScheduleCall</FL>"
     #owner
