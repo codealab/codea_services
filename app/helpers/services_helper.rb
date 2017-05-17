@@ -41,7 +41,7 @@ module ServicesHelper
       type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
       id = contact_id ? contact_id : lead_id
     end
-    base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&newFormat=1&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&newFormat=1&xmlData="
     changes = "<FL val='Subject'>Calendly_new: #{name} - #{start_dt.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call Start Time'>#{(start_dt - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
@@ -64,7 +64,7 @@ module ServicesHelper
   end
 
   def update_contact(type,id,start,link,cancellation,reschedule)
-    base_request = "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&id=#{id}&xmlData="
     changes = "<FL val='Calendly Hangouts'>#{link}</FL>"
     changes += "<FL val='Calendly DateTime'>#{start.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Calendly Cancellation'>#{cancellation}</FL>"
