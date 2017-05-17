@@ -71,7 +71,7 @@ class ServicesController < ApplicationController
     puts "Calendly"
     pp params
     # render plain: "Exito"
-    render plain: create_event(params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a])
+    render plain: create_event(params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule])
     # parsed_params = JSON.parse(params[:_json])
     # event = parsed_params['event']
     # if event == 'invitee.created'

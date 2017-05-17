@@ -23,7 +23,7 @@ module ServicesHelper
     end
   end
 
-  def create_event(name,mail,start_dt,end_dt,link,answer)
+  def create_event(name,mail,start_dt,end_dt,link,answer,cancellation,reschedule)
     contact = search_zoho(mail,'Contacts')
     lead = search_zoho(mail,'Leads')
     if contact
@@ -53,6 +53,19 @@ module ServicesHelper
     changes += "<FL val='whichCall'>ScheduleCall</FL>"
     #owner
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
+    p "Update contact"
+    p update_contact(type, id,start_dt,link,cancellation,reschedule)
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    p check = JSON.parse(Net::HTTP.get(request))
+  end
+
+  def update_contact(type,id,start,link,cancellation,reschedule)
+    base_request = "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}&xmlData="
+    changes = "<FL val='Calendly Hangouts'>#{link}</FL>"
+    changes += "<FL val='Calendly DateTime'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Calendly Cancellation'>#{cancellation}</FL>"
+    changes += "<FL val='Calendly Reschedule'>#{reschedule}</FL>"
+    base_xmldata = "<#{type}><row no='1'>#{changes}</row></#{type}>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
   end
