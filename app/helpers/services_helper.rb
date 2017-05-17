@@ -62,7 +62,7 @@ module ServicesHelper
   def update_contact(type,id,start,link,cancellation,reschedule)
     base_request = "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}&xmlData="
     changes = "<FL val='Calendly Hangouts'>#{link}</FL>"
-    changes += "<FL val='Calendly DateTime'>#{Time.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Calendly DateTime'>#{start.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Calendly Cancellation'>#{cancellation}</FL>"
     changes += "<FL val='Calendly Reschedule'>#{reschedule}</FL>"
     base_xmldata = "<#{type}><row no='1'>#{changes}</row></#{type}>"
