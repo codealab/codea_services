@@ -42,7 +42,7 @@ module ServicesHelper
       id = contact_id ? contact_id : lead_id
     end
     base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&newFormat=1&xmlData="
-    changes = "<FL val='Subject'>Calendly: #{name} - #{start_dt.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes = "<FL val='Subject'>Calendly_new: #{name} - #{start_dt.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call Start Time'>#{(start_dt - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     if type == 'Contacts'
