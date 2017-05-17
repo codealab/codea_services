@@ -23,24 +23,28 @@ module ServicesHelper
     end
   end
 
-  def create_event(name,mail,start_dt,end_dt,link,answer,cancellation,reschedule)
-    contact = search_zoho(mail,'Contacts')
-    lead = search_zoho(mail,'Leads')
-    if contact
-      contact_id = contact[0].is_a?(Array) ? contact[0].first : contact[0]
-      owner_id = contact[1]
-    elsif lead
-      lead_id = lead[0].is_a?(Array) ? lead[0].first : lead[0]
-      owner_id = lead[1]
+  def create_event(id,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule)
+    if id
+      type = "Leads"
     else
-      "ERROR"
+      contact = search_zoho(mail,'Contacts')
+      lead = search_zoho(mail,'Leads')
+      if contact
+        contact_id = contact[0].is_a?(Array) ? contact[0].first : contact[0]
+        owner_id = contact[1]
+      elsif lead
+        lead_id = lead[0].is_a?(Array) ? lead[0].first : lead[0]
+        owner_id = lead[1]
+      else
+        "ERROR"
+      end
+      type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
+      id = contact_id ? contact_id : lead_id
     end
-    type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
     base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&newFormat=1&xmlData="
     changes = "<FL val='Subject'>Calendly: #{name} - #{start_dt.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call Start Time'>#{(start_dt - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    id = contact_id ? contact_id : lead_id
     if type == 'Contacts'
       changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
     else
@@ -54,7 +58,7 @@ module ServicesHelper
     #owner
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
     p "Update contact"
-    p update_contact(type, id,start_dt,link,cancellation,reschedule)
+    p update_contact(type,id,start_dt,link,cancellation,reschedule)
     request = URI.parse(URI.escape(base_request + base_xmldata))
     p check = JSON.parse(Net::HTTP.get(request))
   end
