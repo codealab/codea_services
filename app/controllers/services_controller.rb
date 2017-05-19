@@ -76,7 +76,7 @@ class ServicesController < ApplicationController
     end
     updates = parse_zoho_params(params)
     updates.each { |k,v| changes += "<FL val='#{k}'>#{v}</FL>"}
-    p base_request = params[:zoho_id] ? "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params[:zoho_id]}&xmlData=" : "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
+    p base_request = params[:zoho_id] != "" ? "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params[:zoho_id]}&xmlData=" : "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
     p base_xmldata = "<#{type}><row no='1'>#{changes}</row></#{type}>"
     p request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
