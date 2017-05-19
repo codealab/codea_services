@@ -76,12 +76,14 @@ module ServicesHelper
 
   def parse_zoho_params(params)
     changes = Hash.new
+    puts "PARAMS TO BE PARSED"
+    p params
     params.each do |k,v|
       field = case k
         when 'name' then 'Last Name'
-        when 'utm_source' then 'Lead Source'
-        when 'utm_medium' then 'Lead Medium'
-        when 'utm_campaign' then 'Campaign'
+        when 'source' then 'Lead Source'
+        when 'medium' then 'Lead Medium'
+        when 'campaign' then 'Campaign'
         else k.capitalize
       end
       changes[field] = v
