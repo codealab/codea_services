@@ -74,4 +74,20 @@ module ServicesHelper
     check = JSON.parse(Net::HTTP.get(request))
   end
 
+  def parse_zoho_params(params)
+    changes = Hash.new
+    params.each do |k,v|
+      field = case k
+        when 'name' then 'Last Name'
+        when 'utm_source' then 'Lead Source'
+        when 'utm_medium' then 'Lead Medium'
+        when 'utm_campaign' then 'Campaign'
+        else k.capitalize
+      end
+      changes[field] = v
+    end
+    changes
+  end
+
+
 end
