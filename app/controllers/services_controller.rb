@@ -68,6 +68,27 @@ class ServicesController < ApplicationController
     end
   end
 
+def calendly
+    puts "Calendly"
+    pp params
+    # render plain: "Exito"
+    response = create_event(params[:zoho_id],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule])
+    render plain: response
+    # parsed_params = JSON.parse(params[:_json])
+    # event = parsed_params['event']
+    # if event == 'invitee.created'
+    #   invitee = parsed_params['payload']['invitee']['name']
+    #   invitee_mail = parsed_params['payload']['invitee']['email']
+    #   invitee_start = DateTime.parse(parsed_params['payload']['event']['start_time'])
+    #   invitee_end = DateTime.parse(parsed_params['payload']['event']['end_time'])
+    #   render plain: create_event(invitee,invitee_mail,invitee_start,invitee_end)
+    # elsif event == 'invitee.canceled'
+    #   render plain: 'Canceled'
+    # else
+    #   render plain: 'ERROR'
+    # end
+  end
+
   def payments
     changes = ""
     type = params[:zoho_type] ? params[:zoho_type] : 'Leads'
