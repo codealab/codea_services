@@ -100,7 +100,6 @@ class ServicesController < ApplicationController
     changes = "<FL val='Call Result'>#{text}</FL>"
     changes += "<FL val='Subject'>#{text}</FL>"
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
-    p base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     render json: check.to_json
