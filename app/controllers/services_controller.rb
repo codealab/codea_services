@@ -68,11 +68,11 @@ class ServicesController < ApplicationController
     end
   end
 
-def calendly
+  def calendly
     puts "Calendly"
     pp params
     # render plain: "Exito"
-    response = create_event(params[:zoho_id],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule])
+    response = create_event(params[:zoho_id],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
     render plain: response
     # parsed_params = JSON.parse(params[:_json])
     # event = parsed_params['event']
@@ -89,6 +89,23 @@ def calendly
     # end
   end
 
+  def calendly_cancelled
+    base_request = "https://crm.zoho.com/crm/private/json/Calls/searchRecords?newFormat=1&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi"
+    base_xmldata = "&criteria=(Call Result:#{params[:call_id]})"
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    check = JSON.parse(Net::HTTP.get(request))
+    activity_id = check['response']['result']['Calls']['row']['FL'].first['content']
+    base_request = "https://crm.zoho.com/crm/private/json/Calls/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{activity_id}&newFormat=1&xmlData="
+    text = "calendly_cancelled: #{params[:invitee]} - #{params[:init_date]}"
+    changes = "<FL val='Call Result'>#{text}</FL>"
+    changes += "<FL val='Subject'>#{text}</FL>"
+    base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
+    p base_request + base_xmldata
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    check = JSON.parse(Net::HTTP.get(request))
+    render json: check.to_json
+  end
+
   def payments
     changes = ""
     type = params[:zoho_type] ? params[:zoho_type] : 'Leads'
@@ -97,9 +114,9 @@ def calendly
     end
     updates = parse_zoho_params(params)
     updates.each { |k,v| changes += "<FL val='#{k}'>#{v}</FL>"}
-    p base_request = params[:zoho_id] != "" ? "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params[:zoho_id]}&xmlData=" : "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
-    p base_xmldata = "<#{type}><row no='1'>#{changes}</row></#{type}>"
-    p request = URI.parse(URI.escape(base_request + base_xmldata))
+    base_request = params[:zoho_id] != "" ? "https://crm.zoho.com/crm/private/json/#{type}/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params[:zoho_id]}&xmlData=" : "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
+    base_xmldata = "<#{type}><row no='1'>#{changes}</row></#{type}>"
+    request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     render json: check
   end

@@ -23,7 +23,7 @@ module ServicesHelper
     end
   end
 
-  def create_event(id,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule)
+  def create_event(id,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule,event)
     if id
       type = "Leads"
     else
