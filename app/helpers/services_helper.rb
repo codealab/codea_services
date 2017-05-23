@@ -53,6 +53,7 @@ module ServicesHelper
     end
     changes += "<FL val='Created at'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Description'>#{answer}: #{link}</FL>"
+    changes += "<FL val='Call Result'>#{event}</FL>"
     changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
     changes += "<FL val='whichCall'>ScheduleCall</FL>"
     #owner
