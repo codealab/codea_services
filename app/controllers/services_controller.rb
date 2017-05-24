@@ -1,28 +1,28 @@
 class ServicesController < ApplicationController
   def send_zoho
     p "PARAMS",params
-    render plain: "OK"
-    # user = Salesman.assigned
-    # base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
-    # changes = ""
-    # changes += "<FL val='Lead Owner'>#{user.email}</FL>"
-    # changes += "<FL val='Last Name'>#{params["name"]}</FL>"
-    # changes += "<FL val='Email'>#{params["email"]}</FL>"
-    # changes += "<FL val='Phone'>#{params["phone"]}</FL>"
-    # changes += "<FL val='Description'>#{params["description"]}</FL>"
-    # changes += "<FL val='Lead Source'>#{params["source"]}</FL>"
-    # changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
-    # changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
-    # changes += "<FL val='Offer'>#{params["offer"]}</FL>"
-    # time = Time.zone.now
-    # time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
-    # changes += "<FL val=\"Created Time\">#{time}</FL>"
-    # changes += "<FL val='Created at'>#{time}</FL>"
-    # base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
-    # request = URI.parse(URI.escape(base_request + base_xmldata))
-    # check = JSON.parse(Net::HTTP.get(request))
-    # zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
-    # render json: {id: zoho_id}.to_json
+    # render plain: "OK"
+    user = Salesman.assigned
+    base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
+    changes = ""
+    changes += "<FL val='Lead Owner'>#{user.email}</FL>"
+    changes += "<FL val='Last Name'>#{params["name"]}</FL>"
+    changes += "<FL val='Email'>#{params["email"]}</FL>"
+    changes += "<FL val='Phone'>#{params["phone"]}</FL>"
+    changes += "<FL val='Description'>#{params["description"]}</FL>"
+    changes += "<FL val='Lead Source'>#{params["source"]}</FL>"
+    changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
+    changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
+    changes += "<FL val='Offer'>#{params["offer"]}</FL>"
+    time = Time.zone.now
+    time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
+    changes += "<FL val=\"Created Time\">#{time}</FL>"
+    changes += "<FL val='Created at'>#{time}</FL>"
+    base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    check = JSON.parse(Net::HTTP.get(request))
+    zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
+    render json: {id: zoho_id}.to_json
   end
   def update_zoho
     base_request = "https://crm.zoho.com/crm/private/json/Leads/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&newFormat=1&xmlData="
