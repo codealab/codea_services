@@ -2,7 +2,7 @@ class ServicesController < ApplicationController
   def send_zoho
     p "PARAMS",params
     # render plain: "OK"
-    user = Salesman.assigned
+    p user = Salesman.assigned
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='Lead Owner'>#{user.email}</FL>"
@@ -19,9 +19,10 @@ class ServicesController < ApplicationController
     changes += "<FL val=\"Created Time\">#{time}</FL>"
     changes += "<FL val='Created at'>#{time}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
+    p base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
-    check = JSON.parse(Net::HTTP.get(request))
-    zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
+    p check = JSON.parse(Net::HTTP.get(request))
+    p zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
     render json: {id: zoho_id}.to_json
   end
   def update_zoho
