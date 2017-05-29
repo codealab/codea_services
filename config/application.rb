@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'pp'
+require 'adwords_api'
 
 Bundler.require(*Rails.groups)
 
@@ -22,6 +23,7 @@ module Codeaservices
         ENV[key.to_s] = value
       end if File.exists?(env_file)
     end
+
     config.active_record.raise_in_transactional_callbacks = true
   end
 end

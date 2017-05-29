@@ -12,5 +12,5 @@
 !/log/.keep
 /tmp
 *.DS_Store
-
+/config/adwords_api.yml
 /config/zoho.yml

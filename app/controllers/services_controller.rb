@@ -43,6 +43,7 @@ class ServicesController < ApplicationController
     check = JSON.parse(Net::HTTP.get(request))
     render json: check.to_json
   end
+
   def mail_campaign
     url = params[:url]
     user_type = params['user_type'] == "Leads" ? "Leads" : "Contacts"
