@@ -1,4 +1,5 @@
 class ServicesController < ApplicationController
+
   def send_zoho
     p "PARAMS",params
     # render plain: "OK"
@@ -25,6 +26,7 @@ class ServicesController < ApplicationController
     p zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
     render json: {id: zoho_id}.to_json
   end
+
   def update_zoho
     base_request = "https://crm.zoho.com/crm/private/json/Leads/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{params["zoho_id"]}&newFormat=1&xmlData="
     changes = ""
@@ -78,19 +80,6 @@ class ServicesController < ApplicationController
     # render plain: "Exito"
     response = create_event(params[:zoho_id],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
     render plain: response
-    # parsed_params = JSON.parse(params[:_json])
-    # event = parsed_params['event']
-    # if event == 'invitee.created'
-    #   invitee = parsed_params['payload']['invitee']['name']
-    #   invitee_mail = parsed_params['payload']['invitee']['email']
-    #   invitee_start = DateTime.parse(parsed_params['payload']['event']['start_time'])
-    #   invitee_end = DateTime.parse(parsed_params['payload']['event']['end_time'])
-    #   render plain: create_event(invitee,invitee_mail,invitee_start,invitee_end)
-    # elsif event == 'invitee.canceled'
-    #   render plain: 'Canceled'
-    # else
-    #   render plain: 'ERROR'
-    # end
   end
 
   def calendly_cancelled
@@ -123,4 +112,28 @@ class ServicesController < ApplicationController
     check = JSON.parse(Net::HTTP.get(request))
     render json: check
   end
+
+  def app_answers
+    p params
+    p zoho_id = params[:zoho_id]
+    p answers = params[:answers].to_i
+    base_request = "https://crm.zoho.com/crm/private/json/Contacts/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
+    changes = ""
+    changes += "<FL val='App Answers'>#{answers}</FL>" if answers != ""
+    base_xmldata = "<Contacts><row no='1'>#{changes}</row></Contacts>"
+    request = URI.parse(URI.escape(base_request + base_xmldata))
+    check = JSON.parse(Net::HTTP.get(request))
+    html_data = if answers > 12
+      "<h1>Felicidades todas tus respuestas son correctas</h1>"
+    elsif answers > 9
+      "<h1>Muy bien, contestaste la mayoría de las respuesta correctamente</h1>"
+    elsif answers > 5
+      "<h1>Tienes algunas respuestas correctas</h1>"
+    else
+      "<h1>La mayoría de tus respuestas son incorrectas</h1>"
+    end
+    html_data += "<p>Lograste #{answers}/13 respuestas correctas.</p>"
+    render plain: html_data
+  end
+
 end

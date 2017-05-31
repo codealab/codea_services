@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   post 'calendly_zoho' => 'services#calendly'
   post 'calendly_cancelled' => 'services#calendly_cancelled'
   get 'payments_zoho' => 'services#payments'
+  get 'app_answers' => 'services#app_answers'
 end
