@@ -117,23 +117,23 @@ class ServicesController < ApplicationController
     p params
     p zoho_id = params[:zoho_id]
     p answers = params[:answers].to_i
+    p @closing_date = params[:closing_date]
     base_request = "https://crm.zoho.com/crm/private/json/Contacts/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='App Answers'>#{answers}</FL>" if answers != ""
     base_xmldata = "<Contacts><row no='1'>#{changes}</row></Contacts>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
-    html_data = if answers > 12
-      "<h1>Felicidades todas tus respuestas son correctas</h1>"
+    @title = if answers > 12
+      "¡Felicidades! Todas tus respuestas son correctas"
     elsif answers > 9
-      "<h1>Muy bien, contestaste la mayoría de las respuesta correctamente</h1>"
+      "Muy bien, contestaste la mayoría de las respuestas correctamente"
     elsif answers > 5
-      "<h1>Tienes algunas respuestas correctas</h1>"
+      "Tienes algunas respuestas correctas"
     else
-      "<h1>La mayoría de tus respuestas son incorrectas</h1>"
+      "La mayoría de tus respuestas son incorrectas"
     end
-    html_data += "<p>Lograste #{answers}/13 respuestas correctas.</p>"
-    render plain: html_data
+    @answer = "Lograste #{answers} de 13 respuestas correctas."
   end
 
 end
