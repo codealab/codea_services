@@ -3,17 +3,17 @@
     <div class="col-md-12 text-center">
       <div class="jumbotron" style="background-color: #1f8dd3;margin-top: 50px;color:white;">
         <h1><%= @title %></h1>
-        <h3><%= @answer %></h3>
+        <h3><%= "Lograste #{@answers} de 13 respuestas correctas." %></h3>
       </div>
       <p>
         <br>
-        Muchas gracias por completar la prueba! Tenemos buenas noticias: tu prueba ha sido aprobada y te has ganado la beca oficial de Codea!
+        ¡Muchas gracias por completar la prueba! Tenemos buenas noticias: ¡Tu prueba ha sido aprobada y te has ganado la beca oficial de Codea!
         <br><br>
         <% if @closing_date %>
-          Tienes la oportunidad de utilizar la beca hasta el próximo <%= @closing_date %>: se te dará un 10% de descuento sobre tu curso.
+          Tienes la oportunidad de utilizar la beca hasta el próximo <b><%= @closing_date %></b>: se te dará un 15% de descuento sobre tu curso.
           <br><br>
         <% end %>
-        Puedes finalizar tu inscripción pagando el siguiente link:
+        Puedes finalizar tu inscripción realizando tu pago en el siguiente link:
         <br><br>
         <%= link_to 'Paga aquí', "http://www.codeacamp.mx/pagos/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
         <br><br>
