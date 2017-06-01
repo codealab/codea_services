@@ -114,10 +114,11 @@ class ServicesController < ApplicationController
   end
 
   def app_answers
-    p params
-    p zoho_id = params[:zoho_id]
-    p answers = params[:answers].to_i
-    p @closing_date = params[:closing_date]
+    zoho_id = params[:zoho_id]
+    answers = params[:answers].to_i
+    @closing_date = params[:closing_date]
+    @amount = params[:amount]
+    @name = params[:name]
     base_request = "https://crm.zoho.com/crm/private/json/Contacts/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='App Answers'>#{answers}</FL>" if answers != ""
