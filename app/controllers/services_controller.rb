@@ -120,10 +120,10 @@ class ServicesController < ApplicationController
     @closing_date = params[:closing_date]
     @amount = params[:amount].to_f
     @name = params[:name]
-    base_request = "https://crm.zoho.com/crm/private/json/Contacts/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='App Answers'>#{@answers}</FL>"
-    base_xmldata = "<Contacts><row no='1'>#{changes}</row></Contacts>"
+    base_xmldata = "<Deals><row no='1'>#{changes}</row></Deals>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     @title = if @answers > 12

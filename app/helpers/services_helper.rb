@@ -91,11 +91,9 @@ module ServicesHelper
   end
 
   def calculate_answers(params)
-    correct_answers = {question1: 'Alto nivel, interpretado, y orientado a objetos.', question2: 'Hola mundo', question3: '2.7', question4: 'true', question5: 'Hash', question6: 'title = "Yo soy el título"', question7: 'ID = 5', question8: 'Son elementos que relacionan los valores de una o más variables o constantes para manipularlos.', question9: 'Exponencial', question10: '25', question11: 'Comparan valores entre sí', question12: '->', question13: '# Comentando'}
+    correct_answers = {question1: 'Alto nivel, interpretado, y orientado a objetos.', question2: '"Hola mundo"', question3: '2.7', question4: 'true', question5: 'Hash', question6: 'title = "Yo soy el título"', question7: 'ID = 5', question8: 'Son elementos que relacionan los valores de una o más variables o constantes para manipularlos.', question9: 'Exponencial', question10: '25', question11: 'Comparan valores entre sí', question12: '->', question13: '# Comentando'}
     answers = 0
-    correct_answers.each do |k,v|
-      answers += 1 if v == params[k]
-    end
+    correct_answers.each { |k,v| answers += 1 if v == params[k] }
     answers
   end
 
