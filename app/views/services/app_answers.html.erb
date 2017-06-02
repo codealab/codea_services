@@ -15,7 +15,7 @@
         <% end %>
         Puedes finalizar tu inscripción realizando tu pago en el siguiente link:
         <br><br>
-        <%= link_to 'Paga aquí', "http://www.codeacamp.mx/pagos/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
+        <%= link_to 'Paga aquí', "http://www.codeacamp.mx/payments/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
         <br><br>
         Si tienes alguna duda, escribenos a <a href="mailto:contacto@codea.mx">contacto@codea.mx</a>
         <br>
