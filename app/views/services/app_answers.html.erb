@@ -5,21 +5,25 @@
         <h1><%= @title %></h1>
         <h3><%= "Lograste #{@answers} de 13 respuestas correctas." %></h3>
       </div>
-      <p>
-        <br>
-        ¡Muchas gracias por completar la prueba! Tenemos buenas noticias: ¡Tu prueba ha sido aprobada y te has ganado la beca oficial de Codea!
-        <br><br>
-        <% if @closing_date %>
-          Tienes la oportunidad de utilizar la beca hasta el próximo <b><%= @closing_date %></b>: se te dará un 15% de descuento sobre tu curso.
+
+        <p style="font-size:25px;">
+      <% if @answers > 10 %>
+          <br>
+          <% if @closing_date %>
+            Tienes la oportunidad de utilizar la beca hasta el próximo <b><%= @closing_date %></b>: se te dará un 15% de descuento sobre tu curso.
+            <br><br>
+          <% end %>
+          Puedes finalizar tu inscripción realizando tu pago en el siguiente link:
           <br><br>
-        <% end %>
-        Puedes finalizar tu inscripción realizando tu pago en el siguiente link:
-        <br><br>
-        <%= link_to 'Paga aquí', "http://www.codeacamp.mx/payments/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
-        <br><br>
-        Si tienes alguna duda, escribenos a <a href="mailto:contacto@codea.mx">contacto@codea.mx</a>
-        <br>
-      </p>
+          <%= link_to 'Paga aquí', "http://www.codeacamp.mx/payments/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
+          <br><br>
+          Si tienes alguna duda, escribenos a <a href="mailto:contacto@codea.mx">contacto@codea.mx</a>
+          <br>
+      <% else %>
+        No tuviste suficientes respuestas correctas, puedes volver a intentarlo.
+        <%= link_to "Intentarlo de nuevo", :back %>
+      <% end %>
+        </p>
     </div>
   </div>
 </div>

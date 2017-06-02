@@ -123,6 +123,7 @@ class ServicesController < ApplicationController
     base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='App Answers'>#{@answers}</FL>"
+    # changes += "<FL val='App Attempts'>#{@answers}</FL>"
     base_xmldata = "<Deals><row no='1'>#{changes}</row></Deals>"
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
