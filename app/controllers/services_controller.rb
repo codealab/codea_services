@@ -1,9 +1,8 @@
 class ServicesController < ApplicationController
 
   def send_zoho
-    p "PARAMS",params
     # render plain: "OK"
-    p user = Salesman.assigned
+    user = Salesman.assigned
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='Lead Owner'>#{user.email}</FL>"
@@ -20,10 +19,10 @@ class ServicesController < ApplicationController
     changes += "<FL val=\"Created Time\">#{time}</FL>"
     changes += "<FL val='Created at'>#{time}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
-    p base_request + base_xmldata
+    base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
-    p check = JSON.parse(Net::HTTP.get(request))
-    p zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
+    check = JSON.parse(Net::HTTP.get(request))
+    zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
     render json: {id: zoho_id}.to_json
   end
 
@@ -114,11 +113,14 @@ class ServicesController < ApplicationController
   end
 
   def app_answers
+    puts "params".upcase * 10
+    p params
     zoho_id = params[:zoho_id]
-    # answers = params[:answers].to_i
-    @answers = calculate_answers(params)
     @closing_date = params[:closing_date]
-    @amount = params[:amount].to_f
+    # @answers = calculate_answers(params)
+    @answers = 13
+    # @amount = params[:amount].gsub(",","").to_f
+    @amount = 10000
     @name = params[:name]
     base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""

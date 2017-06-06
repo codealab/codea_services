@@ -2,26 +2,33 @@
   <div class="row">
     <div class="col-md-12 text-center">
       <div class="jumbotron" style="background-color: #1f8dd3;margin-top: 50px;color:white;">
-        <h1><%= @title %></h1>
-        <h3><%= "Lograste #{@answers} de 13 respuestas correctas." %></h3>
+        <h2><%= @title %> <%= "(#{@answers}/13)" %></h2>
+        <h3>Has ganado nuestra beca de 15%.
+        <br><br>
+        <% if @closing_date %>
+          Tienes hasta el día <b><%= @closing_date %></b> para hacer válida tu beca.
+          <br><br>
+        </h3>
+        <% end %>
       </div>
 
         <p style="font-size:25px;">
       <% if @answers > 10 %>
-          <br>
-          <% if @closing_date %>
-            Tienes la oportunidad de utilizar la beca hasta el próximo <b><%= @closing_date %></b>: se te dará un 15% de descuento sobre tu curso.
-            <br><br>
+          <% if @amount %>
+            <% discount = @amount * 0.85 %>
+            Tu monto a pagar es de <b><%= number_to_currency(discount) %></b>.
+          <% else %>
+            Si no estás seguro cuál es el tu monto a pagar, comunícate con tu asesor.
           <% end %>
-          Puedes finalizar tu inscripción realizando tu pago en el siguiente link:
           <br><br>
-          <%= link_to 'Paga aquí', "http://www.codeacamp.mx/payments/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
+          Para aprovechar tu beca finaliza tu inscripción en el siguiente link:
           <br><br>
-          Si tienes alguna duda, escribenos a <a href="mailto:contacto@codea.mx">contacto@codea.mx</a>
+          <%= link_to 'Finaliza tu proceso', "http://www.codeacamp.mx/payments/?amount=#{@amount*0.85}&name=#{@name}", class: 'btn btn-lg btn-success', style: 'font-size:40px;' %>
+          <br><br>
+          Si tienes alguna duda, escríbenos a <a href="mailto:contacto@codea.mx">contacto@codea.mx</a>, o llámanos al <a href="tel:5567267075">55 6726 7075</a>
           <br>
       <% else %>
-        No tuviste suficientes respuestas correctas, puedes volver a intentarlo.
-        <%= link_to "Intentarlo de nuevo", :back %>
+        No tuviste suficientes respuestas correctas, <%= link_to "puedes intentarlo una vez más", :back %>
       <% end %>
         </p>
     </div>
