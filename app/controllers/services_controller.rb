@@ -122,7 +122,7 @@ class ServicesController < ApplicationController
     # @amount = params[:amount].gsub(",","").to_f
     @amount = 10000
     @name = params[:name]
-    base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{zoho_id}&newFormat=1&xmlData="
+    base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='App Answers'>#{@answers}</FL>"
     # changes += "<FL val='App Attempts'>#{@answers}</FL>"
