@@ -23,9 +23,20 @@ module ServicesHelper
     end
   end
 
-  def create_event(id,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule,event)
+  def find_zoho_owner(id,type)
+    base_request = "https://crm.zoho.com/crm/private/json/#{type}/getRecordById?&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}"
+    request = URI.parse(URI.escape(base_request))
+    check = JSON.parse(Net::HTTP.get(request))
+    parsed = parse_response(check,type)[1]
+    parsed ? parsed : false
+  end
+
+
+  def create_event(id,zoho_type,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule,event)
     if id
-      type = "Leads"
+      contact_owner = find_zoho_owner(id,'Contacts')
+      type = zoho_type ? zoho_type : ( zoho_contact ? 'Contacts' : 'Leads' )
+      owner_id = contact_owner ? contact_owner : find_zoho_owner(id,'Leads')
     else
       contact = search_zoho(mail,'Contacts')
       lead = search_zoho(mail,'Leads')

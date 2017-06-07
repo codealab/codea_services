@@ -77,7 +77,7 @@ class ServicesController < ApplicationController
     puts "Calendly"
     pp params
     # render plain: "Exito"
-    response = create_event(params[:zoho_id],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
+    response = create_event(params[:zoho_id],params[:zoho_type],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
     render plain: response
   end
 
