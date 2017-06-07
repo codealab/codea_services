@@ -82,13 +82,14 @@ class ServicesController < ApplicationController
   end
 
   def calendly_cancelled
+    p params
     base_request = "https://crm.zoho.com/crm/private/json/Calls/searchRecords?newFormat=1&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi"
     base_xmldata = "&criteria=(Call Result:#{params[:call_id]})"
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     activity_id = check['response']['result']['Calls']['row']['FL'].first['content']
     base_request = "https://crm.zoho.com/crm/private/json/Calls/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{activity_id}&newFormat=1&xmlData="
-    text = "calendly_cancelled: #{params[:invitee]} - #{params[:init_date]}"
+    text = "Calendly_cancelled: #{params[:name]} - #{params[:init_date]} - #{params[:call_id]}"
     changes = "<FL val='Call Result'>#{text}</FL>"
     changes += "<FL val='Subject'>#{text}</FL>"
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
