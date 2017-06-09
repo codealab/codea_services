@@ -118,10 +118,10 @@ class ServicesController < ApplicationController
     p params
     zoho_id = params[:zoho_id]
     @closing_date = params[:closing_date]
-    # @answers = calculate_answers(params)
-    @answers = 13
-    # @amount = params[:amount].gsub(",","").to_f
-    @amount = 10000
+    @answers = calculate_answers(params)
+    # @answers = 13
+    @amount = params[:amount].gsub(",","").to_f
+    # @amount = params[:amount]
     @name = params[:name]
     base_request = "https://crm.zoho.com/crm/private/json/Deals/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&id=#{zoho_id}&newFormat=1&xmlData="
     changes = ""
