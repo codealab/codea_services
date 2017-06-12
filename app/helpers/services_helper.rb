@@ -27,27 +27,26 @@ module ServicesHelper
     base_request = "https://crm.zoho.com/crm/private/json/#{type}/getRecordById?&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}"
     request = URI.parse(URI.escape(base_request))
     check = JSON.parse(Net::HTTP.get(request))
-    parsed = parse_response(check,type)[1]
+    parsed = parse_response(check,type)#[1]
     parsed ? parsed : false
   end
 
 
   def create_event(id,zoho_type,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule,event)
     if id
+      # REVISAR
       contact_owner = find_zoho_owner(id,'Contacts')
-      type = zoho_type ? zoho_type : ( zoho_contact ? 'Contacts' : 'Leads' )
+      type = zoho_type ? zoho_type : ( contact_owner ? 'Contacts' : 'Leads' )
       owner_id = contact_owner ? contact_owner : find_zoho_owner(id,'Leads')
     else
       contact = search_zoho(mail,'Contacts')
-      lead = search_zoho(mail,'Leads')
       if contact
         contact_id = contact[0].is_a?(Array) ? contact[0].first : contact[0]
         owner_id = contact[1]
-      elsif lead
+      else
+        lead = search_zoho(mail,'Leads')
         lead_id = lead[0].is_a?(Array) ? lead[0].first : lead[0]
         owner_id = lead[1]
-      else
-        "ERROR"
       end
       type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
       id = contact_id ? contact_id : lead_id
@@ -58,6 +57,7 @@ module ServicesHelper
     changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     if type == 'Contacts'
       changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
+      changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
     else
       changes += "<FL val='SEID'>#{id}</FL>"
       changes += "<FL val='SEMODULE'>Leads</FL>"
@@ -65,7 +65,6 @@ module ServicesHelper
     changes += "<FL val='Created at'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
     changes += "<FL val='Description'>#{answer}: #{link}</FL>"
     changes += "<FL val='Call Result'>#{event}</FL>"
-    changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
     changes += "<FL val='whichCall'>ScheduleCall</FL>"
     #owner
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
