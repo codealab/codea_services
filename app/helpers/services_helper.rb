@@ -4,11 +4,13 @@ module ServicesHelper
     base_request = "https://crm.zoho.com/crm/private/json/#{type}/searchRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&criteria=(Email:#{email})"
     request = URI.parse(URI.escape(base_request))
     check = JSON.parse(Net::HTTP.get(request))
+    puts "Parse Response"
+    p check
     parse_response(check,type)
   end
 
   def parse_response(check,type)
-    if check['response']['nodata']
+    if check['response']['nodata'] || check['response']['error']
       false
     else
       response = check['response']['result'][type]['row']
@@ -19,7 +21,7 @@ module ServicesHelper
         zoho_id = response.first['FL'].first['content']
         owner_id = response.first['FL'][1]['content']
       end
-      [zoho_id,owner_id]
+      {zoho_id: zoho_id, owner_id: owner_id}
     end
   end
 
@@ -31,47 +33,72 @@ module ServicesHelper
     parsed ? parsed : false
   end
 
+  def parse_salesforceuuid
+    zoho = params[:zoho_id].split(',')
+    return parse_zoho_mail if zoho.count == 1
+    params.update(zoho_id: zoho[0], zoho_type: zoho[1], zoho_owner: zoho[2])
+  end
 
-  def create_event(id,zoho_type,name,mail,start_dt,end_dt,link,answer,cancellation,reschedule,event)
-    if id
-      # REVISAR
-      contact_owner = find_zoho_owner(id,'Contacts')
-      type = zoho_type ? zoho_type : ( contact_owner ? 'Contacts' : 'Leads' )
-      owner_id = contact_owner ? contact_owner : find_zoho_owner(id,'Leads')
+  def parse_zoho_mail
+    contact = search_zoho(params[:email],'Contacts')
+    if contact
+      zoho_id = contact[:zoho_id].is_a?(Array) ? contact[:zoho_id].first : contact[:zoho_id]
+      type = "Contacts"
+      owner_id = contact[:owner_id]
     else
-      contact = search_zoho(mail,'Contacts')
-      if contact
-        contact_id = contact[0].is_a?(Array) ? contact[0].first : contact[0]
-        owner_id = contact[1]
+      lead = search_zoho(params[:email],'Leads')
+      if lead
+        zoho_id = lead[:zoho_id].is_a?(Array) ? lead[:zoho_id].first : lead[:zoho_id]
+        type = "Leads"
+        owner_id = lead[:owner_id]
       else
-        lead = search_zoho(mail,'Leads')
-        lead_id = lead[0].is_a?(Array) ? lead[0].first : lead[0]
-        owner_id = lead[1]
+        params.update(error: true, message: "No tiene zoho id ni mail")
       end
-      type = contact_id ? 'Contacts' : (lead_id ? 'Leads' : false)
-      id = contact_id ? contact_id : lead_id
     end
+    params.update(zoho_id: zoho_id, zoho_type: type, zoho_owner: owner_id)
+  end
+
+  def create_call_zoho(zoho_id,zoho_type,zoho_owner,name,start_time,end_time,link,q_a,cancellation,reschedule,event_id)
+    # Creo la línea base del API request a Zoho
     base_request = "https://crm.zoho.com/crm/private/json/Calls/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&newFormat=1&xmlData="
-    changes = "<FL val='Subject'>Calendly_new: #{name} - #{start_dt.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    changes += "<FL val='Call Start Time'>#{(start_dt - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    changes += "<FL val='Call End Time'>#{(end_dt).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    if type == 'Contacts'
-      changes += "<FL val='#{type.upcase[0..-2]}ID'>#{id}</FL>"
-      changes += "<FL val='SMOWNERID'>#{owner_id}</FL>"
+    # Genero y concateno una variable con los parametros de la petición
+    changes = "<FL val='Subject'>Calendly_new: #{name} - #{start_time.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Call Start Time'>#{(start_time - 15.minutes).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Call End Time'>#{(end_time).strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Created at'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
+    changes += "<FL val='Description'>#{q_a}: #{link}</FL>"
+    changes += "<FL val='Call Result'>#{event_id}</FL>"
+    changes += "<FL val='whichCall'>ScheduleCall</FL>"
+    # # el formato en que se manda el owner depende del modulo
+    if zoho_type == 'Contacts'
+      changes += "<FL val='CONTACTID'>#{zoho_id}</FL>"
+      changes += "<FL val='SEMODULE'>Contacts</FL>"
     else
-      changes += "<FL val='SEID'>#{id}</FL>"
+      changes += "<FL val='LEADID'>#{zoho_id}</FL>"
       changes += "<FL val='SEMODULE'>Leads</FL>"
     end
-    changes += "<FL val='Created at'>#{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}</FL>"
-    changes += "<FL val='Description'>#{answer}: #{link}</FL>"
-    changes += "<FL val='Call Result'>#{event}</FL>"
-    changes += "<FL val='whichCall'>ScheduleCall</FL>"
-    #owner
+    changes += "<FL val='SEID'>#{zoho_id}</FL>"
+    changes += "<FL val='SMOWNERID'>#{zoho_owner}</FL>"
+    # Agregamos los cambios al objeto Calls de XML
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
-    p "Update contact"
-    p update_contact(type,id,start_dt,link,cancellation,reschedule)
+    # Update a los datos del Contacto o Leads
+    update_contact(zoho_type,zoho_id,start_time,link,cancellation,reschedule)
+    # Generamos la URI para hacer el request
     request = URI.parse(URI.escape(base_request + base_xmldata))
-    p check = JSON.parse(Net::HTTP.get(request))
+    # Enviamos la URI vía GET y parseamos a JSON los resultados
+    check = JSON.parse(Net::HTTP.get(request))
+  end
+
+
+
+  # params[:zoho_id],params[:zoho_type],params[:zoho_owner],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id]
+  def create_event
+    params[:zoho_id] ? parse_salesforceuuid : parse_zoho_mail
+    if params[:error]
+       {error: 'No Zoho ID, no email found', email: params[:email]}
+    else
+      create_call_zoho(params[:zoho_id],params[:zoho_type],params[:zoho_owner],params[:name],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
+    end
   end
 
   def update_contact(type,id,start,link,cancellation,reschedule)

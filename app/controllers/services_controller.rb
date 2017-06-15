@@ -74,11 +74,13 @@ class ServicesController < ApplicationController
   end
 
   def calendly
-    puts "Calendly"
-    pp params
-    # render plain: "Exito"
-    response = create_event(params[:zoho_id],params[:zoho_type],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
-    render plain: response
+    # parse_salesforceuuid
+    check = create_event
+    if check[:error]
+      render status: 500, json: check
+    else
+      render json: check
+    end
   end
 
   def calendly_cancelled
