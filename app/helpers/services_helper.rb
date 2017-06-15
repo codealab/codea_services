@@ -4,8 +4,6 @@ module ServicesHelper
     base_request = "https://crm.zoho.com/crm/private/json/#{type}/searchRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&criteria=(Email:#{email})"
     request = URI.parse(URI.escape(base_request))
     check = JSON.parse(Net::HTTP.get(request))
-    puts "Parse Response"
-    p check
     parse_response(check,type)
   end
 
@@ -95,7 +93,7 @@ module ServicesHelper
   def create_event
     params[:zoho_id] ? parse_salesforceuuid : parse_zoho_mail
     if params[:error]
-       {error: 'No Zoho ID, no email found', email: params[:email]}
+       {error: "No Zoho ID, or no email found. Email: #{params[:email]} Name: #{params[:email]}", email: params[:email]}
     else
       create_call_zoho(params[:zoho_id],params[:zoho_type],params[:zoho_owner],params[:name],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
     end
