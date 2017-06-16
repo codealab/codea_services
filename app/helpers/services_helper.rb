@@ -24,6 +24,14 @@ module ServicesHelper
     end
   end
 
+  def parse_cancelled(check)
+    if check['response']['nodata'] || check['response']['error']
+      false
+    else
+      check['response']['result']['Calls']['row']['FL'].first['content']
+    end
+  end
+
   def find_zoho_owner(id,type)
     base_request = "https://crm.zoho.com/crm/private/json/#{type}/getRecordById?&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{id}"
     request = URI.parse(URI.escape(base_request))
