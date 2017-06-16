@@ -14,6 +14,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
     changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
     changes += "<FL val='Offer'>#{params["offer"]}</FL>"
+    changes += "<FL val='Lead Status'>Not Contacted</FL>"
     time = Time.zone.now
     time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
     changes += "<FL val=\"Created Time\">#{time}</FL>"
@@ -22,8 +23,8 @@ class ServicesController < ApplicationController
     base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
-    zoho_id = check["response"]["result"]["recorddetail"]["FL"].first["content"]
-    render json: {id: zoho_id}.to_json
+    zoho_id = parse_response(check,'Leads')
+    render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
 
   def update_zoho
