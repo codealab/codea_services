@@ -50,7 +50,7 @@ module ServicesHelper
         type = "Leads"
         owner_id = lead[:owner_id]
       else
-        params.update(error: true, message: "No tiene zoho id ni mail")
+        {error: "No Zoho ID, or no email found. Email: #{params[:email]} Name: #{params[:name]}", email: params[:email]}
       end
     end
     params.update(zoho_id: zoho_id, zoho_type: type, zoho_owner: owner_id)
@@ -93,7 +93,7 @@ module ServicesHelper
   def create_event
     params[:zoho_id] ? parse_salesforceuuid : parse_zoho_mail
     if params[:error]
-       {error: "No Zoho ID, or no email found. Email: #{params[:email]} Name: #{params[:email]}", email: params[:email]}
+       {error: "No Zoho ID, or no email found. Email: #{params[:email]} Name: #{params[:name]}", email: params[:email]}
     else
       create_call_zoho(params[:zoho_id],params[:zoho_type],params[:zoho_owner],params[:name],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id])
     end
