@@ -11,7 +11,7 @@ module ServicesHelper
     if check['response']['nodata'] || check['response']['error']
       false
     else
-      response = check['response']['result']['type']['row']
+      response = check['response']['result']['recorddetail']
       unless response.kind_of?(Array)
         zoho_id = response['FL'].first['content']
         owner_id = response['FL'][1]['content']
