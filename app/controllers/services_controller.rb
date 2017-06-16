@@ -95,7 +95,7 @@ class ServicesController < ApplicationController
     activity_id = parse_cancelled(check)
     if activity_id
       base_request = "https://crm.zoho.com/crm/private/json/Calls/updateRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&id=#{activity_id}&newFormat=1&xmlData="
-      text = "Calendly_cancelled: #{params[:name]} - #{params[:init_date]} - #{params[:call_id]}"
+      text = "Calendly_cancelled: #{params[:name]} - #{params[:email]} - #{params[:init_date]} - #{params[:call_id]}"
       changes = "<FL val='Call Result'>#{text}</FL>"
       changes += "<FL val='Subject'>#{text}</FL>"
       base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
@@ -103,7 +103,7 @@ class ServicesController < ApplicationController
       check = JSON.parse(Net::HTTP.get(request))
       render json: check.to_json
     else
-      render status: 500, json: {error: "No Activity Found in Zoho: #{params[:name]} - #{params[:call_id]} - #{params[:init_date]}"}
+      render status: 500, json: {error: "No Activity Found in Zoho: #{params[:name]} - #{params[:email]} - #{params[:call_id]} - #{params[:init_date]}"}
     end
   end
 
