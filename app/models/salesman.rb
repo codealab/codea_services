@@ -16,4 +16,8 @@ class Salesman < ActiveRecord::Base
     active.update(active: true)
     active
   end
+  def self.actual_id
+    ids = { 'omar@codea.mx' => '2066727000001483009', 'contacto@codea.mx' => '2066727000000531969', 'enrique@codea.mx' => '2066727000004666316' }
+    ids[self.find_by_active(true).email]
+  end
 end

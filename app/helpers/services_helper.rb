@@ -11,15 +11,15 @@ module ServicesHelper
     if check['response']['nodata'] || check['response']['error']
       false
     else
-      response = check['response']['result']['recorddetail']
+      response = check['response']['result']['type']['row']
       unless response.kind_of?(Array)
-        p response
         zoho_id = response['FL'].first['content']
         owner_id = response['FL'][1]['content']
       else
         zoho_id = response.first['FL'].first['content']
         owner_id = response.first['FL'][1]['content']
       end
+      owner_id = /^[0-9]*$/.match(owner_id) ? owner_id : Salesman.actual_id
       {zoho_id: zoho_id, owner_id: owner_id}
     end
   end
