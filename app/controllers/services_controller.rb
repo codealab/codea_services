@@ -87,7 +87,6 @@ class ServicesController < ApplicationController
   end
 
   def calendly_cancelled
-    p params
     base_request = "https://crm.zoho.com/crm/private/json/Calls/searchRecords?newFormat=1&authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi"
     base_xmldata = "&criteria=(Call Result:#{params[:call_id]})"
     request = URI.parse(URI.escape(base_request + base_xmldata))

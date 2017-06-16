@@ -11,7 +11,9 @@ module ServicesHelper
     if check['response']['nodata'] || check['response']['error']
       false
     else
-      response = check['response']['result'][type]['row']
+      puts "PARAMS " * 10
+      p params
+      response = params[:action] == 'calendly' ? parse_calendly_check(check,type) : parse_send_check(check)
       unless response.kind_of?(Array)
         zoho_id = response['FL'].first['content']
         owner_id = response['FL'][1]['content']
@@ -22,6 +24,16 @@ module ServicesHelper
       owner_id = /^[0-9]*$/.match(owner_id) ? owner_id : Salesman.actual_id
       {zoho_id: zoho_id, owner_id: owner_id}
     end
+  end
+
+  def parse_calendly_check(check,type)
+    puts "PARSE CALENDLY " * 10
+    p check['response']['result'][type]['row']
+  end
+
+  def parse_send_check(check)
+    puts "PARSE SEND " * 10
+    p check['response']['result']['recorddetail']
   end
 
   def parse_cancelled(check)
