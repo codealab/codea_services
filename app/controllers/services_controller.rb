@@ -23,8 +23,6 @@ class ServicesController < ApplicationController
     base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
-    puts "CHECK " * 10
-    pp check
     zoho_id = parse_response(check,'Leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
