@@ -24,7 +24,7 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
-    data = "#{user.name} - #{params[:name]}, #{params[:email]}, #{params[:phone]} - #{params[:source]}:#{params[:campaign]}"
+    data = "#{user.name} - <https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>, #{params[:email]}, #{params[:phone]} - #{params[:source]}:#{params[:campaign]}"
     slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
