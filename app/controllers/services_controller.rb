@@ -24,6 +24,8 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
+    data = "#{user.name} - #{params[:name]}, #{params[:email]}, #{params[:phone]} - #{params[:source]}:#{params[:campaign]}"
+    slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
 
@@ -75,7 +77,8 @@ class ServicesController < ApplicationController
   end
 
   def calendly
-    # parse_salesforceuuid
+    data = "<https://crm.zoho.com/crm/EntityInfo.do?id=#{params[:zoho_id]}&module=#{params[:zoho_type]}|#{params[:name]}>, #{params[:email]}, answer: #{params[:q_a]} #{params[:start_time]}"
+    slack_it(data, 'calendly')
     check = create_event
     if check[:error]
       render status: 500, json: check
@@ -120,8 +123,6 @@ class ServicesController < ApplicationController
   end
 
   def app_answers
-    puts "params".upcase * 10
-    p params
     zoho_id = params[:zoho_id]
     @closing_date = params[:closing_date]
     @answers = calculate_answers(params)
@@ -145,6 +146,8 @@ class ServicesController < ApplicationController
     else
       "La mayoría de tus respuestas son incorrectas"
     end
+    data = "#{@closing_date} - <https://crm.zoho.com/crm/EntityInfo.do?module=Potentials&id=#{zoho_id}|#{@name}> - #{number_to_currency(@amount, precision: 2)}"
+    slack_it!(data, 'answers')
   end
 
 end

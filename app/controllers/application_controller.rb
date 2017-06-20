@@ -4,4 +4,5 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   protect_from_forgery with: :null_session
   include ServicesHelper
+  include ActionView::Helpers::NumberHelper
 end

@@ -3,7 +3,9 @@
     <div class="col-md-12 text-center">
       <div class="jumbotron" style="background-color: #1f8dd3;margin-top: 50px;color:white;">
         <h2><%= @title %> <%= "(#{@answers}/13)" %></h2>
-        <h3>Has ganado nuestra beca de 15%.
+        <% if @answers >= 10 %>
+          <h3>Has ganado nuestra beca de 15%.
+        <% end %>
         <br><br>
         <% if @closing_date %>
           Tienes hasta el día <b><%= @closing_date %></b> para hacer válida tu beca.
@@ -13,7 +15,7 @@
       </div>
 
         <p style="font-size:25px;">
-      <% if @answers > 10 %>
+      <% if @answers >= 10 %>
           <% if @amount %>
             <% discount = @amount * 0.85 %>
             Tu monto a pagar es de <b><%= number_to_currency(discount) %></b>.

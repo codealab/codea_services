@@ -149,4 +149,26 @@ module ServicesHelper
     answers
   end
 
+  # API Slack
+  def slack_it!(data,event)
+    uri = URI.parse('https://hooks.slack.com/services/T04N9D6A8/' + slack_channels[event.to_sym])
+    req = Net::HTTP::Post.new(uri.to_s)
+    req.body = {text: data}.to_json
+    req['Content-Type'] = 'application/json'
+    response = https(uri).request(req)
+  end
+
+  def slack_channels
+    {leads: 'B5XMN2SSK/ZHWaQMAgI7sVTk8KZGqSXBXc', answers: 'B5W73GKLG/XTqu8ntvrEtfsXA7B1APWnz3', calendly: 'B5WAJSEBT/h0GygCxPdBG3Tm7JhwvqGumQ'}
+  end
+
+  private
+
+  def https(uri)
+    Net::HTTP.new(uri.host, uri.port).tap do |http|
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+  end
+
 end
