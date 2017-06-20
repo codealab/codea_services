@@ -77,7 +77,8 @@ class ServicesController < ApplicationController
   end
 
   def calendly
-    data = "<https://crm.zoho.com/crm/EntityInfo.do?id=#{params[:zoho_id]}&module=#{params[:zoho_type]}|#{params[:name]}>, #{params[:email]}, answer: #{params[:q_a]} #{params[:start_time]}"
+    zoho_data = params[:zoho_id].split(',')
+    data = "<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>, #{params[:email]}, answer: #{params[:q_a]} #{params[:start_time]}"
     slack_it!(data, 'calendly')
     check = create_event
     if check[:error]
