@@ -163,7 +163,7 @@ module ServicesHelper
   end
 
   def kind_user
-    { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernández' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
+    { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernandez' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
   end
 
   private
