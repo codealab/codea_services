@@ -24,7 +24,7 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
-    data = "#{user.name} - <https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>, #{params[:email]}, #{params[:phone]} - #{params[:source]}:#{params[:campaign]}"
+    data = ":bust_in_silhouette: Owner: #{user.name} \n <https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}> \n #{params[:email]}, #{params[:phone]} - #{params[:source]}:#{params[:campaign]}"
     slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
@@ -78,7 +78,7 @@ class ServicesController < ApplicationController
 
   def calendly
     zoho_data = params[:zoho_id].split(',')
-    data = "<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>, #{params[:email]}, answer: #{params[:q_a]} #{params[:start_time]}"
+    data = ":spiral_calendar_pad: <https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}> \n #{params[:email]}, answer: #{params[:q_a]} #{params[:start_time]}"
     slack_it!(data, 'calendly')
     check = create_event
     if check[:error]
@@ -147,7 +147,7 @@ class ServicesController < ApplicationController
     else
       "La mayoría de tus respuestas son incorrectas"
     end
-    data = "#{@closing_date} - <https://crm.zoho.com/crm/EntityInfo.do?module=Potentials&id=#{zoho_id}|#{@name}> - #{number_to_currency(@amount, precision: 2)}"
+    data = ":trophy: <https://crm.zoho.com/crm/EntityInfo.do?module=Potentials&id=#{zoho_id}|#{@name}> \n #{number_to_currency(@amount, precision: 2)} - #{@closing_date}"
     slack_it!(data, 'answers')
   end
 
