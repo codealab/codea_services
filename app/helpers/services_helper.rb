@@ -162,6 +162,10 @@ module ServicesHelper
     {leads: 'B5XMN2SSK/ZHWaQMAgI7sVTk8KZGqSXBXc', answers: 'B5W73GKLG/XTqu8ntvrEtfsXA7B1APWnz3', calendly: 'B5WAJSEBT/h0GygCxPdBG3Tm7JhwvqGumQ'}
   end
 
+  def kind_user
+    { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernández' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
+  end
+
   private
 
   def https(uri)
