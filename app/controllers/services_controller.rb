@@ -24,7 +24,7 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
-    data = ":bust_in_silhouette: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>* \n #{params[:email]} - #{params[:phone]} \n Owner: *#{user.name}* \n Source: *#{params[:source]}*, Campaign: *#{params[:campaign]}* \n [<@ibarroladt>, <@#{kind_user[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
+    data = ":bust_in_silhouette: <https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}> \n #{params[:email]} - _#{params[:phone]}_ \n *Owner*: #{user.name} \n *Source/Campaign*: #{params[:source]} / #{params[:campaign]} \n [<@ibarroladt>, <@#{kind_user[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
     slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
