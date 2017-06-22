@@ -78,7 +78,7 @@ class ServicesController < ApplicationController
 
   def calendly
     zoho_data = params[:zoho_id].split(',')
-    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{params[:start_time].strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} "
+    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{params[:start_time]} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} "
     slack_it!(data, 'calendly')
     check = create_event
     if check[:error]
@@ -147,7 +147,7 @@ class ServicesController < ApplicationController
     else
       "La mayoría de tus respuestas son incorrectas"
     end
-    data = ":trophy: <https://crm.zoho.com/crm/EntityInfo.do?module=Potentials&id=#{zoho_id}|#{@name}> \n #{number_to_currency(@amount, precision: 2)} - #{@closing_date}"
+    data = ":trophy: *<https://crm.zoho.com/crm/EntityInfo.do?module=Potentials&id=#{zoho_id}|#{@name}>* \n *Monto:* #{number_to_currency(@amount, precision: 2)} \n *Fecha de cierre:* #{@closing_date}"
     slack_it!(data, 'answers')
   end
 
