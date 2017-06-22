@@ -1,5 +1,9 @@
 class ServicesController < ApplicationController
 
+  def slack_it
+    render json: slack_it!(params[:text], 'miscellaneous')
+  end
+
   def send_zoho
     # render plain: "OK"
     user = Salesman.assigned
