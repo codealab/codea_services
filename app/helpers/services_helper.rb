@@ -104,9 +104,6 @@ module ServicesHelper
     check = JSON.parse(Net::HTTP.get(request))
   end
 
-
-
-  # params[:zoho_id],params[:zoho_type],params[:zoho_owner],params[:name],params[:email],DateTime.parse(params[:start_time]),DateTime.parse(params[:end_time]),params[:link],params[:q_a],params[:cancellation],params[:reschedule],params[:event_id]
   def create_event
     params[:zoho_id] ? parse_salesforceuuid : parse_zoho_mail
     if params[:error]
