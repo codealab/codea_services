@@ -10,7 +10,8 @@ class ServicesController < ApplicationController
 
   def codeatalks_confirm
     data = params[:data]
-    if params[:zoho_id]
+    p "ZOHO ID #{params[:zoho_id].inspect}"
+    if data[:zoho_id]
       text = ":incoming_envelope: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{data[:zoho_id]}&module=Contacts | #{data[:name]}>* \n _#{data[:title]}-#{data[:date]}_ \n #{data[:email]}"
     else
       text = ":incoming_envelope: *#{data[:name]}* \n _#{data[:title]} - #{data[:date]}_ \n #{data[:email]} - #{data[:phone]} \n Campaign: #{data[:utm_campaign]}"
