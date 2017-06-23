@@ -18,8 +18,8 @@
     <%= link_to 'Confirmar Asistencia', codeatalks_confirm_path(data: params), class: 'btn btn-lg btn-success', remote: true %>
   <% else %>
     <br><br>
-    <div class="col-md-offset-5 col-md-2 text-left">
-      <%= simple_form_for :data, url: codeatalks_confirm_path(data: params), method: :get, remote: true do |f| %>
+    <div class="col-md-offset-4 col-md-4 text-left">
+      <%= simple_form_for :data, url: codeatalks_confirm_path(data: params), method: :get, remote: true, :defaults => {:required => false} do |f| %>
         <%= f.input :name, as: :string %>
         <%= f.input :email, as: :string %>
         <%= f.input :phone, as: :string %>
