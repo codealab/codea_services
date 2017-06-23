@@ -150,7 +150,7 @@ module ServicesHelper
   def slack_it!(data,event)
     uri = URI.parse('https://hooks.slack.com/services/T04N9D6A8/' + slack_channels[event.to_sym])
     req = Net::HTTP::Post.new(uri.to_s)
-    req.body = {text: data}.to_json
+    req.body = {text: data + "\n [<@ibarroladt>]"}.to_json
     req['Content-Type'] = 'application/json'
     response = https(uri).request(req)
   end

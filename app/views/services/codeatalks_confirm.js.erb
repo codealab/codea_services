@@ -1,2 +1,9 @@
 $('.confirm-btn').hide();
 $('#post-confirmation').show();
+<% if @link %>
+	$('#post-landing').html("<%= j render('services/to_landing', link: @link) %>");
+<% end %>
+
+
+
+

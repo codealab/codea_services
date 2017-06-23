@@ -5,12 +5,17 @@ class ServicesController < ApplicationController
   end
 
   def codeatalks
-    @data = { name: params[:name], email: params[:email], zoho_id: params[:zoho_id], title: params[:title] }
+    params[:date] = params[:date] ? l(DateTime.parse(params[:date]), format:"%b %d, %Y %H:%M") : "Jun 23, 2017 19:00" 
   end
 
   def codeatalks_confirm
     data = params[:data]
-    text = ":incoming_envelope: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{data[:zoho_id]}&module=Contacts | #{data[:name]}>* \n _#{data[:title]}_ \n #{data[:email]}"
+    if params[:zoho_id]
+      text = ":incoming_envelope: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{data[:zoho_id]}&module=Contacts | #{data[:name]}>* \n _#{data[:title]}-#{data[:date]}_ \n #{data[:email]}"
+    else
+      text = ":incoming_envelope: *#{data[:name]}* \n _#{data[:title]} - #{data[:date]}_ \n #{data[:email]} - #{data[:phone]} \n Campaign: #{data[:utm_campaign]}"
+      @link = "http://www.codeacamp.mx/nueva_imagen/?name=#{data[:name]}&email=#{data[:email]}&phone=#{data[:phone]}&utm_source=#{data[:utm_source]}&utm_medium=#{data[:utm_medium]}&utm_campaign=#{data[:utm_campaign]}" unless params[:zoho_id]
+    end
     slack_it!(text, 'codeatalks')
   end
 
