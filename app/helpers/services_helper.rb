@@ -156,7 +156,7 @@ module ServicesHelper
   end
 
   def slack_channels
-    {leads: 'B5XMN2SSK/ZHWaQMAgI7sVTk8KZGqSXBXc', answers: 'B5W73GKLG/XTqu8ntvrEtfsXA7B1APWnz3', calendly: 'B5WAJSEBT/h0GygCxPdBG3Tm7JhwvqGumQ', miscellaneous: 'B5Z3XEE4F/ecm2ltWMgDrSdA05VVm0pqpV'}
+    {leads: 'B5XMN2SSK/ZHWaQMAgI7sVTk8KZGqSXBXc', answers: 'B5W73GKLG/XTqu8ntvrEtfsXA7B1APWnz3', calendly: 'B5WAJSEBT/h0GygCxPdBG3Tm7JhwvqGumQ', codeatalks: 'B5Z4NC2Q6/JP1McoDYrJ40UNJE9rtjXwTt', miscellaneous: 'B5Z3XEE4F/ecm2ltWMgDrSdA05VVm0pqpV'}
   end
 
   def kind_user

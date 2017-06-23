@@ -8,4 +8,6 @@ Rails.application.routes.draw do
   get 'payments_zoho', to: 'services#payments'
   get 'app_answers', to: 'services#app_answers'
   get 'slack_it', to: 'services#slack_it'
+  get 'codeatalks', to: 'services#codeatalks'
+  get 'codeatalks_confirm', to: 'services#codeatalks_confirm'
 end
