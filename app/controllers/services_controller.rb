@@ -5,7 +5,7 @@ class ServicesController < ApplicationController
   end
 
   def codeatalks
-    params[:date] = params[:date] ? l(DateTime.parse(params[:date]), format:"%b %d, %Y %H:%M") : "Jun 23, 2017 19:00" 
+    params[:date] = params[:date] ? l(DateTime.parse(params[:date]), format:"%b %d, %Y %H:%M") : "Jun 23, 2017 19:00"
   end
 
   def codeatalks_confirm
@@ -26,14 +26,20 @@ class ServicesController < ApplicationController
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
     changes = ""
     changes += "<FL val='Lead Owner'>#{user.email}</FL>"
-    changes += "<FL val='Last Name'>#{params["name"]}</FL>"
-    changes += "<FL val='Email'>#{params["email"]}</FL>"
-    changes += "<FL val='Phone'>#{params["phone"]}</FL>"
-    changes += "<FL val='Description'>#{params["description"]}</FL>"
-    changes += "<FL val='Lead Source'>#{params["source"]}</FL>"
-    changes += "<FL val='Lead Medium'>#{params["medium"]}</FL>"
-    changes += "<FL val='Campaign'>#{params["campaign"]}</FL>"
-    changes += "<FL val='Offer'>#{params["offer"]}</FL>"
+    changes += "<FL val='Last Name'>#{params[:name]}</FL>"
+    changes += "<FL val='Email'>#{params[:email]}</FL>"
+    changes += "<FL val='Phone'>#{params[:phone]}</FL>"
+    changes += "<FL val='Description'>#{params[:description]}</FL>"
+    changes += "<FL val='Lead Source'>#{params[:source]}</FL>"
+    changes += "<FL val='Lead Medium'>#{params[:medium]}</FL>"
+    changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
+
+    changes += "<FL val='Group Ad'>#{params[:group_ad]}</FL>"
+    changes += "<FL val='Ad set'>#{params[:ad_set]}</FL>"
+    changes += "<FL val='Ad Name'>#{params[:ad]}</FL>"
+    changes += "<FL val='Page'>#{params[:page]}</FL>"
+
+    changes += "<FL val='Offer'>#{params[:offer]}</FL>"
     changes += "<FL val='Lead Status'>Not Contacted</FL>"
     time = Time.zone.now
     time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
@@ -44,7 +50,7 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
-    data = ":bust_in_silhouette: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>* \n *Mail/Phone* #{params[:email]} / #{params[:phone]} \n *Owner*: #{user.name} \n *Source/Campaign*: #{params[:source]} / #{params[:campaign]} \n [<@ibarroladt>, <@#{kind_user[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
+    data = ":bust_in_silhouette: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>* \n *Mail/Phone* #{params[:email]} / #{params[:phone]} \n *Owner*: #{user.name} \n *Marketing:* #{params[:source]} / #{params[:medium]}  / #{params[:campaign]}  / #{params[:group_ad]}  / #{params[:ad_set]}  / #{params[:ad]}  / #{params[:page]} \n [<@ibarroladt>, <@#{kind_user[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
     slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
