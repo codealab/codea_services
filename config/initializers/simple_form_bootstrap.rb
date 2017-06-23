@@ -1,14 +1,13 @@
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
   config.error_notification_class = 'alert alert-danger'
-  config.button_class = 'btn btn-default'
+  config.button_class = 'btn btn-large btn-primary'
   config.boolean_label_class = nil
 
   config.wrappers :vertical_form, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
-    b.optional :minlength
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
@@ -23,7 +22,6 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
-    b.optional :minlength
     b.optional :readonly
     b.use :label, class: 'control-label'
 
@@ -57,7 +55,6 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
-    b.optional :minlength
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
@@ -74,7 +71,6 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
-    b.optional :minlength
     b.optional :readonly
     b.use :label, class: 'col-sm-3 control-label'
 
@@ -91,7 +87,7 @@ SimpleForm.setup do |config|
 
     b.wrapper tag: 'div', class: 'col-sm-offset-3 col-sm-9' do |wr|
       wr.wrapper tag: 'div', class: 'checkbox' do |ba|
-        ba.use :label_input
+        ba.use :label_input, class: 'col-sm-9'
       end
 
       wr.use :error, wrap_with: { tag: 'span', class: 'help-block' }
@@ -116,7 +112,6 @@ SimpleForm.setup do |config|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
-    b.optional :minlength
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
@@ -127,16 +122,47 @@ SimpleForm.setup do |config|
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
 
-  config.wrappers :multi_select, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
-    b.use :html5
-    b.optional :readonly
-    b.use :label, class: 'control-label'
-    b.wrapper tag: 'div', class: 'form-inline' do |ba|
-      ba.use :input, class: 'form-control'
-      ba.use :error, wrap_with: { tag: 'span', class: 'help-block' }
-      ba.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+  # Las dos configuraciones de abajo las saque del siguiente post
+  # http://almassapargali.com/2015/01/15/build-bootstrap-forms-with-simple_form-in-ruby-on-rails.html
+
+  1.upto(12) do |col|
+    config.wrappers "field#{col}".to_sym, tag: 'div', class: 'form-group', error_class: 'has-error' do |mdf|
+      mdf.use :html5
+      mdf.use :placeholder
+      mdf.use :label, class: 'sr-only'
+
+      mdf.wrapper tag: 'div', class: "col-sm-#{col}" do |wr|
+        wr.use :input, class: 'form-control'
+        wr.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+        wr.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+      end
     end
   end
+
+
+  1.upto(12) do |col|
+    config.wrappers "inline_field#{col}".to_sym, tag: 'div', class: "col-sm-#{col}", error_class: 'has-error' do |ic|
+      ic.use :html5
+      ic.use :placeholder
+      ic.use :label, class: 'sr-only'
+      ic.use :input, class: 'form-control'
+      ic.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+      ic.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+    end
+
+    config.wrappers "inline_bool#{col}".to_sym, tag: 'div', class: "col-sm-#{col}", error_class: 'has-error' do |ib|
+      ib.use :html5
+      ib.optional :readonly
+
+      ib.wrapper tag: 'div', class: 'checkbox' do |ba|
+        ba.use :input
+        ba.use :label
+      end
+      ib.use :error, wrap_with: { tag: 'span', class: 'help-block' }
+      ib.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
+    end
+  end
+
   # Wrappers for forms and inputs using the Bootstrap toolkit.
   # Check the Bootstrap docs (http://getbootstrap.com)
   # to learn about the different styles for forms and inputs,
@@ -147,8 +173,6 @@ SimpleForm.setup do |config|
     radio_buttons: :vertical_radio_and_checkboxes,
     file: :vertical_file_input,
     boolean: :vertical_boolean,
-    datetime: :multi_select,
-    date: :multi_select,
-    time: :multi_select
   }
 end
+
