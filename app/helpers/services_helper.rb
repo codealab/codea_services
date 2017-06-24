@@ -163,6 +163,10 @@ module ServicesHelper
     { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernández' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
   end
 
+  def campaign_params
+    {'CampañaS5': {group_ad: 'CodeaCamp5', ad_set: 'Slideshow2', ad: 'Slideshow New'}}
+  end
+
   private
 
   def https(uri)

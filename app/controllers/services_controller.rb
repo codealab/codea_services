@@ -10,7 +10,6 @@ class ServicesController < ApplicationController
 
   def codeatalks_confirm
     data = params[:data]
-    p "ZOHO ID #{params[:zoho_id].inspect}"
     if data[:zoho_id]
       text = ":incoming_envelope: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{data[:zoho_id]}&module=Contacts | #{data[:name]}>* \n _#{data[:title]}-#{data[:date]}_ \n #{data[:email]}"
     else
@@ -34,10 +33,12 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params[:medium]}</FL>"
     changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
 
-    changes += "<FL val='Group Ad'>#{params[:group_ad]}</FL>"
-    changes += "<FL val='Ad set'>#{params[:ad_set]}</FL>"
-    changes += "<FL val='Ad Name'>#{params[:ad]}</FL>"
-    changes += "<FL val='Page'>#{params[:page]}</FL>"
+    changes += "<FL val='Group Ad'>#{params[:group_ad] ? params[:group_ad] : campaign_params['CampañaS5'.to_sym][:group_ad]}</FL>"
+    changes += "<FL val='Ad set'>#{params[:ad_set] ? params[:ad_set] : campaign_params['CampañaS5'.to_sym][:ad_set]]}</FL>"
+    changes += "<FL val='Ad Name'>#{params[:ad] ? params[:ad] : campaign_params['CampañaS5'.to_sym][:ad]}</FL>"
+    changes += "<FL val='Page'>#{params[:page] ? params[:page] : campaign_params['CampañaS5'.to_sym][:page]}</FL>"
+    changes += "<FL val='Campaign Term'>#{params[:term] ? params[:term] : campaign_params['CampañaS5'.to_sym][:term]}</FL>"
+    changes += "<FL val='Campaign Content'>#{params[:content] ? params[:content] : campaign_params['CampañaS5'.to_sym][:content]}</FL>"
 
     changes += "<FL val='Offer'>#{params[:offer]}</FL>"
     changes += "<FL val='Lead Status'>Not Contacted</FL>"
