@@ -5,7 +5,7 @@ class ServicesController < ApplicationController
   end
 
   def codeatalks
-    params[:date] = params[:date] ? l(DateTime.parse(params[:date]), format:"%b %d, %Y %H:%M") : "Jun 23, 2017 19:00"
+    params[:date] = params[:date] ? l(DateTime.parse(params[:date]), format:"%b %d, %Y %H:%M") : "Jun 27, 2017 19:00"
   end
 
   def codeatalks_confirm
@@ -34,7 +34,7 @@ class ServicesController < ApplicationController
     changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
 
     changes += "<FL val='Group Ad'>#{params[:group_ad] ? params[:group_ad] : campaign_params['CampañaS5'.to_sym][:group_ad]}</FL>"
-    changes += "<FL val='Ad set'>#{params[:ad_set] ? params[:ad_set] : campaign_params['CampañaS5'.to_sym][:ad_set]]}</FL>"
+    changes += "<FL val='Ad set'>#{params[:ad_set] ? params[:ad_set] : campaign_params['CampañaS5'.to_sym][:ad_set]}</FL>"
     changes += "<FL val='Ad Name'>#{params[:ad] ? params[:ad] : campaign_params['CampañaS5'.to_sym][:ad]}</FL>"
     changes += "<FL val='Page'>#{params[:page] ? params[:page] : campaign_params['CampañaS5'.to_sym][:page]}</FL>"
     changes += "<FL val='Campaign Term'>#{params[:term] ? params[:term] : campaign_params['CampañaS5'.to_sym][:term]}</FL>"
