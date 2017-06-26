@@ -8,9 +8,30 @@
         </span>
       </span>
     </span>
-    <h4>Muchas gracias por tu interes en la plática:</h2>
-    <h2><%= params[:title] %></h1>
-    <h4>Jun 27, 2017, 7:00pm</h3>
+    <h2>Muchas gracias por tu interes en la plática:</h2>
+
+    <div class="row">
+      <h1><%= params[:title] %></h1>
+      <h4>Jun 27, 2017, 7:00pm</h4>
+      <br class="clear"></br>
+      <div class="col-md-6">
+        <h3>AndrésMartínez | TalentManager | Bitso</h3>
+        <br>
+        <p>Mañana nos dará su visión sobre esta cultura de empresas emergentes, el talento que la rodea y sus diferentes enfoques en la tecnología y la innovación para sobrevivir y además, ser exitosas.</p>
+        <br><br>
+        <p style="font-size: 14px;">Actualmente, Andrés se desempeña como Director de Recursos Humanos en Bitso, plataforma digital para automatizar y llevar a cabo operaciones financieras entre diferentes monedas, un nuevo mundo financiero global, a través de la tecnología.
+        <br> A la par es fundador, socio mayoritario y director en ConDuckting, consultoría en desarrollo humano, para generar equipos de alto impacto comprometidos con la misión y visión de la empresa.
+        <br> Ha sido parte fundamental de la cultura emprendedora en México como speaker motivacional, como consultor y como mentor, gestionando la formación del talento mexicano para alcanzar su máximo potencial, en todos los niveles, desde los más junior hasta los más experimentados.</p>
+      </div>
+      <div class="col-md-6">
+        <div class="thumbnail vcenter">
+          <br><br>
+          <img src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAmlAAAAJGI5ODM5OWVmLWE3MDMtNGVmYy04NjVjLWExZTUzMzFmMDIwNw.jpg" alt="Andrés Martínez">
+          <br><br>
+        </div>
+      </div>
+      <br class="clear"></br>
+    </div>
 
     <% if params[:zoho_id] %>
       <p>Da click en el siguiente botón para validar tu asistencia</p>
