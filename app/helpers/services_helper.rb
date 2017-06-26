@@ -159,8 +159,12 @@ module ServicesHelper
     {leads: 'B5XMN2SSK/ZHWaQMAgI7sVTk8KZGqSXBXc', answers: 'B5W73GKLG/XTqu8ntvrEtfsXA7B1APWnz3', calendly: 'B5WAJSEBT/h0GygCxPdBG3Tm7JhwvqGumQ', codeatalks: 'B5Z4NC2Q6/JP1McoDYrJ40UNJE9rtjXwTt', miscellaneous: 'B5Z3XEE4F/ecm2ltWMgDrSdA05VVm0pqpV'}
   end
 
-  def kind_user
+  def owner_with_name
     { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernández' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
+  end
+
+  def owner_with_id
+    { '2066727000000531969' => 'jonathan88', '2066727000004666316' => 'enrique-codea', '2066727000001483009' => 'omvzqz' }
   end
 
   def campaign_params

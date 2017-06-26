@@ -51,7 +51,7 @@ class ServicesController < ApplicationController
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
-    data = ":bust_in_silhouette: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>* \n *Mail/Phone* #{params[:email]} / #{params[:phone]} \n *Owner*: #{user.name} \n *Marketing:* #{params[:source]} / #{params[:medium]}  / #{params[:campaign]}  / #{params[:group_ad]}  / #{params[:ad_set]}  / #{params[:ad]}  / #{params[:page]} \n [<@#{kind_user[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
+    data = ":bust_in_silhouette: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_id[:zoho_id]}&module=Leads|#{params[:name]}>* \n *Mail/Phone* #{params[:email]} / #{params[:phone]} \n *Owner*: #{user.name} \n *Marketing:* #{params[:source]} / #{params[:medium]}  / #{params[:campaign]}  / #{params[:group_ad]}  / #{params[:ad_set]}  / #{params[:ad]}  / #{params[:page]} \n [<@#{owner_with_name[user.name]}>] _#{Time.zone.now.strftime('%d-%m-%y %H:%M:%S')}_"
     slack_it!(data, 'leads')
     render json: {zoho_id: zoho_id[:zoho_id], owner_id: zoho_id[:owner_id]}.to_json
   end
@@ -105,7 +105,7 @@ class ServicesController < ApplicationController
 
   def calendly
     zoho_data = params[:zoho_id].split(',')
-    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@omvzqz>,<@enrique-codea>,<@jonathan88>]"
+    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@#{owner_with_id[zoho_data[2]]}>]"
     slack_it!(data, 'calendly')
     check = create_event
     if check[:error]
