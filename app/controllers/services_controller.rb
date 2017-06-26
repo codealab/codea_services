@@ -105,7 +105,12 @@ class ServicesController < ApplicationController
 
   def calendly
     zoho_data = params[:zoho_id].split(',')
-    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@#{owner_with_id[zoho_data[2]]}>]"
+    if zoho_data[3]
+      owner = zoho_data[2]
+    else
+      owner = owner_with_id[zoho_data[2]]
+    end
+    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@#{owner}>]"
     slack_it!(data, 'calendly')
     check = create_event
     if check[:error]

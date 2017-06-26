@@ -51,7 +51,8 @@ module ServicesHelper
   def parse_salesforceuuid
     zoho = params[:zoho_id].split(',')
     return parse_zoho_mail if zoho.count == 1
-    params.update(zoho_id: zoho[0], zoho_type: zoho[1], zoho_owner: zoho[2])
+    owner =  zoho[3] ? id_with_name[zoho[2]] : zoho[2]
+    params.update(zoho_id: zoho[0], zoho_type: zoho[1], zoho_owner: owner)
   end
 
   def parse_zoho_mail
@@ -93,7 +94,7 @@ module ServicesHelper
       changes += "<FL val='SEMODULE'>Leads</FL>"
     end
     changes += "<FL val='SEID'>#{zoho_id}</FL>"
-    changes += "<FL val='SMOWNERID'>#{zoho_owner}</FL>"
+    p changes += "<FL val='SMOWNERID'>#{zoho_owner}</FL>"
     # Agregamos los cambios al objeto Calls de XML
     base_xmldata = "<Calls><row no='1'>#{changes}</row></Calls>"
     # Update a los datos del Contacto o Leads
@@ -161,6 +162,10 @@ module ServicesHelper
 
   def owner_with_name
     { 'Jonathan Reyes' => 'jonathan88', 'Enrique Hernández' => 'enrique-codea', 'Omar Vazquez' => 'omvzqz' }
+  end
+
+  def id_with_name
+    { 'Jonathan Reyes' => '2066727000000531969', 'Enrique Hernández' => '2066727000004666316', 'Omar Vazquez' => '2066727000001483009' }
   end
 
   def owner_with_id
