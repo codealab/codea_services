@@ -23,8 +23,7 @@ class ServicesController < ApplicationController
     # render plain: "OK"
     user = Salesman.assigned
     base_request = "https://crm.zoho.com/crm/private/json/Leads/insertRecords?authtoken=#{ENV['ZOHO_TOKEN']}&scope=crmapi&wfTrigger=true&duplicateCheck=2&newFormat=1&xmlData="
-    changes = ""
-    changes += "<FL val='Lead Owner'>#{user.email}</FL>"
+    changes = "<FL val='Lead Owner'>#{user.email}</FL>"
     changes += "<FL val='Last Name'>#{params[:name]}</FL>"
     changes += "<FL val='Email'>#{params[:email]}</FL>"
     changes += "<FL val='Phone'>#{params[:phone]}</FL>"
@@ -33,11 +32,11 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params[:medium]}</FL>"
     changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
 
-    group_ad = params[:group_ad] ? params[:group_ad] : campaign_params[params[:campaign].to_sym][:group_ad]
-    ad_set = params[:ad_set] ? params[:ad_set] : campaign_params[params[:campaign].to_sym][:ad_set]
-    ad = params[:ad] ? params[:ad] : campaign_params[params[:campaign].to_sym][:ad]
-    term = params[:term] ? params[:term] : campaign_params[params[:campaign].to_sym][:term]
-    content = params[:content] ? params[:content] : campaign_params[params[:campaign].to_sym][:content]
+    group_ad = params[:group_ad].empty? ? campaign_params[params[:campaign].to_sym][:group_ad] : params[:group_ad]
+    ad_set = params[:ad_set].empty? ? campaign_params[params[:campaign].to_sym][:ad_set] : params[:ad_set]
+    ad = params[:ad].empty? ? campaign_params[params[:campaign].to_sym][:ad] : params[:ad]
+    term = params[:term].empty? ? campaign_params[params[:campaign].to_sym][:term] : params[:term]
+    content = params[:content].empty? ? campaign_params[params[:campaign].to_sym][:content] : params[:content]
     params.update(group_ad: group_ad, ad_set: ad_set, ad: ad, term: term, content: content)
     changes += "<FL val='Group Ad'>#{group_ad}</FL>"
     changes += "<FL val='Ad Set'>#{ad_set}</FL>"
@@ -47,12 +46,10 @@ class ServicesController < ApplicationController
     changes += "<FL val='Campaign Content'>#{content}</FL>"
     changes += "<FL val='Offer'>#{params[:offer]}</FL>"
     changes += "<FL val='Lead Status'>Not Contacted</FL>"
-    time = Time.zone.now
-    time = time.strftime("%m/%d/%Y %H:%M:%S").to_s
-    changes += "<FL val=\"Created Time\">#{time}</FL>"
+    time = Time.zone.now.strftime("%m/%d/%Y %H:%M:%S").to_s
+    changes += "<FL val='Created Time'>#{time}</FL>"
     changes += "<FL val='Created at'>#{time}</FL>"
     base_xmldata = "<Leads><row no='1'>#{changes}</row></Leads>"
-    base_request + base_xmldata
     request = URI.parse(URI.escape(base_request + base_xmldata))
     check = JSON.parse(Net::HTTP.get(request))
     zoho_id = parse_response(check,'Leads')
@@ -115,10 +112,11 @@ class ServicesController < ApplicationController
     else
       owner = owner_with_name[zoho_data[2]]
     end
-    params.update(zoho_owner: id_with_name[zoho_data[2]])
-    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@#{owner}>]"
+    data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]}"
+    data += "\n [<@#{owner}>]" if owner
     slack_it!(data, 'calendly')
     check = create_event
+    # check = {error: 'test'}
     if check[:error]
       render status: 500, json: check
     else
