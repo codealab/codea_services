@@ -33,13 +33,18 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params[:medium]}</FL>"
     changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
 
-    changes += "<FL val='Group Ad'>#{params[:group_ad] ? params[:group_ad] : campaign_params['CampañaS5'.to_sym][:group_ad]}</FL>"
-    changes += "<FL val='Ad set'>#{params[:ad_set] ? params[:ad_set] : campaign_params['CampañaS5'.to_sym][:ad_set]}</FL>"
-    changes += "<FL val='Ad Name'>#{params[:ad] ? params[:ad] : campaign_params['CampañaS5'.to_sym][:ad]}</FL>"
-    changes += "<FL val='Page'>#{params[:page] ? params[:page] : campaign_params['CampañaS5'.to_sym][:page]}</FL>"
-    changes += "<FL val='Campaign Term'>#{params[:term] ? params[:term] : campaign_params['CampañaS5'.to_sym][:term]}</FL>"
-    changes += "<FL val='Campaign Content'>#{params[:content] ? params[:content] : campaign_params['CampañaS5'.to_sym][:content]}</FL>"
-
+    group_ad = params[:group_ad] ? params[:group_ad] : campaign_params[params[:campaign].to_sym][:group_ad]
+    ad_set = params[:ad_set] ? params[:ad_set] : campaign_params[params[:campaign].to_sym][:ad_set]
+    ad = params[:ad] ? params[:ad] : campaign_params[params[:campaign].to_sym][:ad]
+    term = params[:term] ? params[:term] : campaign_params[params[:campaign].to_sym][:term]
+    content = params[:content] ? params[:content] : campaign_params[params[:campaign].to_sym][:content]
+    params.update(group_ad: group_ad, ad_set: ad_set, ad: ad, term: term, content: content)
+    changes += "<FL val='Group Ad'>#{group_ad}</FL>"
+    changes += "<FL val='Ad Set'>#{ad_set}</FL>"
+    changes += "<FL val='Ad Name'>#{ad}</FL>"
+    changes += "<FL val='Page'>#{params[:page]}</FL>"
+    changes += "<FL val='Campaign Term'>#{term}</FL>"
+    changes += "<FL val='Campaign Content'>#{content}</FL>"
     changes += "<FL val='Offer'>#{params[:offer]}</FL>"
     changes += "<FL val='Lead Status'>Not Contacted</FL>"
     time = Time.zone.now
@@ -105,11 +110,12 @@ class ServicesController < ApplicationController
 
   def calendly
     zoho_data = params[:zoho_id].split(',')
-    if zoho_data[3]
-      owner = zoho_data[2]
-    else
+    if zoho_data[2].to_i == 0
       owner = owner_with_id[zoho_data[2]]
+    else
+      owner = owner_with_name[zoho_data[2]]
     end
+    params.update(zoho_owner: id_with_name[zoho_data[2]])
     data = ":spiral_calendar_pad: *<https://crm.zoho.com/crm/EntityInfo.do?id=#{zoho_data[0]}&module=#{zoho_data[1]}|#{params[:name]}>* \n *Start Time:* #{Time.parse(params[:start_time]).strftime('%d-%m-%y %H:%M:%S')} \n *Email:* #{params[:email]} \n *Answer:* #{params[:q_a]} \n [<@#{owner}>]"
     slack_it!(data, 'calendly')
     check = create_event

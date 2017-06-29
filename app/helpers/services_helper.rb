@@ -50,8 +50,8 @@ module ServicesHelper
 
   def parse_salesforceuuid
     zoho = params[:zoho_id].split(',')
-    return parse_zoho_mail if zoho.count == 1
-    owner =  zoho[3] ? id_with_name[zoho[2]] : zoho[2]
+    return parse_zoho_mail if zoho.empty?
+    owner =  zoho[2].to_i == 0 ? id_with_name[zoho[2]] : zoho[2]
     params.update(zoho_id: zoho[0], zoho_type: zoho[1], zoho_owner: owner)
   end
 
