@@ -32,18 +32,20 @@ class ServicesController < ApplicationController
     changes += "<FL val='Lead Medium'>#{params[:medium]}</FL>"
     changes += "<FL val='Campaign'>#{params[:campaign]}</FL>"
 
-    group_ad = params[:group_ad].empty? ? campaign_params[params[:campaign].to_sym][:group_ad] : params[:group_ad]
-    ad_set = params[:ad_set].empty? ? campaign_params[params[:campaign].to_sym][:ad_set] : params[:ad_set]
-    ad = params[:ad].empty? ? campaign_params[params[:campaign].to_sym][:ad] : params[:ad]
-    term = params[:term].empty? ? campaign_params[params[:campaign].to_sym][:term] : params[:term]
-    content = params[:content].empty? ? campaign_params[params[:campaign].to_sym][:content] : params[:content]
-    params.update(group_ad: group_ad, ad_set: ad_set, ad: ad, term: term, content: content)
-    changes += "<FL val='Group Ad'>#{group_ad}</FL>"
-    changes += "<FL val='Ad Set'>#{ad_set}</FL>"
-    changes += "<FL val='Ad Name'>#{ad}</FL>"
+    unless params[:campaign].empty?
+      group_ad = params[:group_ad].empty? ? campaign_params[params[:campaign].to_sym][:group_ad] : params[:group_ad]
+      ad_set = params[:ad_set].empty? ? campaign_params[params[:campaign].to_sym][:ad_set] : params[:ad_set]
+      ad = params[:ad].empty? ? campaign_params[params[:campaign].to_sym][:ad] : params[:ad]
+      term = params[:term].empty? ? campaign_params[params[:campaign].to_sym][:term] : params[:term]
+      content = params[:content].empty? ? campaign_params[params[:campaign].to_sym][:content] : params[:content]
+      params.update(group_ad: group_ad, ad_set: ad_set, ad: ad, term: term, content: content)
+      changes += "<FL val='Group Ad'>#{group_ad}</FL>"
+      changes += "<FL val='Ad Set'>#{ad_set}</FL>"
+      changes += "<FL val='Ad Name'>#{ad}</FL>"
+      changes += "<FL val='Campaign Term'>#{term}</FL>"
+      changes += "<FL val='Campaign Content'>#{content}</FL>"
+    end
     changes += "<FL val='Page'>#{params[:page]}</FL>"
-    changes += "<FL val='Campaign Term'>#{term}</FL>"
-    changes += "<FL val='Campaign Content'>#{content}</FL>"
     changes += "<FL val='Offer'>#{params[:offer]}</FL>"
     changes += "<FL val='Lead Status'>Not Contacted</FL>"
     time = Time.zone.now.strftime("%m/%d/%Y %H:%M:%S").to_s

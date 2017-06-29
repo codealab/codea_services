@@ -175,7 +175,9 @@ module ServicesHelper
   def campaign_params
     {
       'CampañaS5': {group_ad: 'CodeaCamp5', ad_set: 'Slideshow2', ad: 'Slideshow New'},
-      'S7_MX': {group_ad: 'Campaña S7 MX', ad_set: 'Campaña S7', ad: 'Slideshow New'}
+      'S7_MX': {group_ad: 'Campaña S7 MX', ad_set: 'Campaña S7', ad: 'Slideshow New'},
+      nil: {group_ad: nil, ad_set: nil, ad: nil},
+      "": {group_ad: nil, ad_set: nil, ad: nil}
     }
   end
 
